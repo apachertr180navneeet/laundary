@@ -2,26 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon\Carbon;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable ,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-
-    protected $appends = ['avatar_full_path'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'mobile',
+        'role_id',
+        'is_deleted',
+        'image',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,29 +44,10 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'phone_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
-
-
-    public function getJWTIdentifier()
+    public function orders()
     {
-        return $this->getKey();
+        return $this->hasMany(Order::class);
     }
-    
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
-    
-
-    public function getAvatarFullPathAttribute()
-    {
-        if($this->avatar != ''){
-            return asset($this->avatar);
-        }else{
-            return "";
-        }
-    }
-
 }
