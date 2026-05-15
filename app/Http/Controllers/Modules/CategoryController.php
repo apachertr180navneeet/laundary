@@ -8,7 +8,7 @@ use App\Models\ProductCategory;
 use App\Models\ProductItem;
 use App\Models\ProductType;
 use App\Models\Service;
-use App\Models\Tenant;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +19,8 @@ class CategoryController extends Controller
     //
     public function index()
     {
-        $clothes_datas = ProductItem::where('product_id', 1)->get();
+        try {
+            $clothes_datas = ProductItem::where('product_id', 1)->get();
         $upholstery_datas = ProductItem::where('product_id', 2)->get();
         $footwearandbags = ProductItem::where('product_id', 3)->get();
         $others = ProductItem::where('product_id', 4)->get();
@@ -27,15 +28,18 @@ class CategoryController extends Controller
         $services = Service::all();
         // dd($clothes_data);
         return view('admin.categorylist', ['clothes_datas' => $clothes_datas, 'upholstery_datas' => $upholstery_datas, 'footwearandbags' => $footwearandbags, 'others' => $others, 'services' => $services, 'laundries' => $laundries]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function fetchClothesData(Request $request)
     {
-
-        // dd($request->all());
-        // Fetch data from the database and filter based on the selected option
-        $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
-            ->where('product_items.product_id', 1)
+        try {
+            // dd($request->all());
+            // Fetch data from the database and filter based on the selected option
+            $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
+                ->where('product_items.product_id', 1)
             ->join('product_items', 'product_categories.product_item_id', '=', 'product_items.id')
             ->join('operations', 'operations.id', '=', 'product_categories.operation_id');
         if ($request->has('option')) {
@@ -47,15 +51,18 @@ class CategoryController extends Controller
 
         // Return data as JSON response
         return response()->json($data);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function fetchUpholsteryData(Request $request)
     {
-
-        // dd($request->all());
-        // Fetch data from the database and filter based on the selected option
-        $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
-            ->where('product_items.product_id', 2)
+        try {
+            // dd($request->all());
+            // Fetch data from the database and filter based on the selected option
+            $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
+                ->where('product_items.product_id', 2)
             ->join('product_items', 'product_categories.product_item_id', '=', 'product_items.id')
             ->join('operations', 'operations.id', '=', 'product_categories.operation_id');
         if ($request->has('option')) {
@@ -67,13 +74,17 @@ class CategoryController extends Controller
 
         // Return data as JSON response
         return response()->json($data);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function fetchFootBagData(Request $request)
     {
-        // Fetch data from the database and filter based on the selected option
-        $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
-            ->where('product_items.product_id', 3)
+        try {
+            // Fetch data from the database and filter based on the selected option
+            $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
+                ->where('product_items.product_id', 3)
             ->join('product_items', 'product_categories.product_item_id', '=', 'product_items.id')
             ->join('operations', 'operations.id', '=', 'product_categories.operation_id');
         if ($request->has('option')) {
@@ -85,15 +96,18 @@ class CategoryController extends Controller
 
         // Return data as JSON response
         return response()->json($data);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function fetchOtherData(Request $request)
     {
-
-        // dd($request->all());
-        // Fetch data from the database and filter based on the selected option
-        $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
-            ->where('product_items.product_id', 4)
+        try {
+            // dd($request->all());
+            // Fetch data from the database and filter based on the selected option
+            $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
+                ->where('product_items.product_id', 4)
             ->join('product_items', 'product_categories.product_item_id', '=', 'product_items.id')
             ->join('operations', 'operations.id', '=', 'product_categories.operation_id');
         if ($request->has('option')) {
@@ -105,14 +119,17 @@ class CategoryController extends Controller
 
         // Return data as JSON response
         return response()->json($data);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
     public function fetchLaundryData(Request $request)
     {
-
-        // dd($request->all());
-        // Fetch data from the database and filter based on the selected option
-        $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
-            ->where('product_items.product_id', 5)
+        try {
+            // dd($request->all());
+            // Fetch data from the database and filter based on the selected option
+            $query = ProductCategory::select('product_categories.id as product_cat_id', 'product_categories.name as product_name', 'product_categories.price', 'operations.name as service_name', 'operations.id as operation_id')
+                ->where('product_items.product_id', 5)
             ->join('product_items', 'product_categories.product_item_id', '=', 'product_items.id')
             ->join('operations', 'operations.id', '=', 'product_categories.operation_id');
         if ($request->has('option')) {
@@ -124,6 +141,9 @@ class CategoryController extends Controller
 
         // Return data as JSON response
         return response()->json($data);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function deleteClothes(Request $request)
@@ -157,15 +177,20 @@ class CategoryController extends Controller
 
     public function addcategory()
     {
-        $products = Product::all();
-        $services = Service::all();
-        $producttypes = ProductType::all();
-        return view('admin.category', ['products' => $products, 'services' => $services, 'producttypes' => $producttypes]);
+        try {
+            $products = Product::all();
+            $services = Service::all();
+            $producttypes = ProductType::all();
+            return view('admin.category', ['products' => $products, 'services' => $services, 'producttypes' => $producttypes]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function storeCategory(Request $request)
     {
-        $currentTimestamp = Carbon::now();
+        try {
+            $currentTimestamp = Carbon::now();
         $category = $request->category;
         // dd($category);
         foreach ($category as $cat_key => $cat) {
@@ -204,5 +229,8 @@ class CategoryController extends Controller
         }
         // return redirect()->back();
         return redirect()->route('categorylist')->with('success', 'Categories and items added successfully');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 }

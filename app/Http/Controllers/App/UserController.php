@@ -13,9 +13,13 @@ class UserController extends Controller
      */
     public function index(User $user)
     {
-        $users = User::get();
-        //dd($tenants->toArray());
-        return view('app.users.index',['users'=>$users]);
+        try {
+            $users = User::get();
+            //dd($tenants->toArray());
+            return view('app.users.index',['users'=>$users]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -23,7 +27,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('app.users.create');
+        try {
+            return view('app.users.create');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -31,16 +39,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name'=>'required|string|max:255',
-            'email'=>'required|email|max:255',
-            'mobile_no' => 'required|string|max:20',
-            'role' => 'required|in:user,admin',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'name'=>'required|string|max:255',
+                'email'=>'required|email|max:255',
+                'mobile_no' => 'required|string|max:20',
+                'role' => 'required|in:user,admin',
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
 
-        $user = User::create($validatedData);
-        return redirect()->route('users.index');
+            $user = User::create($validatedData);
+            return redirect()->route('users.index');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -48,7 +60,11 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -64,7 +84,11 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -72,6 +96,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 }

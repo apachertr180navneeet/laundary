@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Modules;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Tenant;
+
 use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,7 +18,8 @@ class CategoriesController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Category::query();
+        try {
+            $query = Category::query();
 
         if ($request->ajax()) {
             $search = $request->input('search');
@@ -43,6 +44,9 @@ class CategoriesController extends Controller
         // Handle non-AJAX request
         $categories = $query->orderBy('id', 'desc')->paginate(10);
         return view('admin.category.category', compact('categories'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
@@ -112,14 +116,19 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
-        $category = Category::findOrFail($id);
-        return response()->json($category);
+        try {
+            $category = Category::findOrFail($id);
+            return response()->json($category);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
     public function editCategory(Request $request, $id)
     {
-        // Custom validation messages
+        try {
+            // Custom validation messages
         $messages = [
             'categoryname.required' => 'The category name is required.',
             'categoryname.string' => 'The category name must be a string.',
@@ -183,11 +192,15 @@ class CategoriesController extends Controller
             'success' => true,
             'message' => 'Category updated successfully'
         ]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function search(Request $request)
     {
-        $search = $request->input('search');
+        try {
+            $search = $request->input('search');
 
         $query = Category::query();
 
@@ -204,6 +217,9 @@ class CategoriesController extends Controller
             'categories' => $categories->items(),
             'pagination' => (string) $categories->links(),
         ]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 }

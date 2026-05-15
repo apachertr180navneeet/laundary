@@ -16,12 +16,20 @@ class AdminUserController extends Controller
     //========================= User Member Funcations ========================//
     
     public function index() {
-        return view('admin.users.index');
+        try {
+            return view('admin.users.index');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
     
     public function getallUser(Request $request) {
-        $users = User::where('role', 'user')->orderBy('id', 'desc')->get();
-        return response()->json(['data' => $users]);
+        try {
+            $users = User::where('role', 'user')->orderBy('id', 'desc')->get();
+            return response()->json(['data' => $users]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
    
     public function userStatus(Request $request) {
@@ -41,8 +49,12 @@ class AdminUserController extends Controller
 
 
     public function profile(){
-        $user = Auth::user();
-        return view('web.auth.profile',compact('user'));
+        try {
+            $user = Auth::user();
+            return view('web.auth.profile',compact('user'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function show($id) {

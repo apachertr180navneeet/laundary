@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Modules;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Tenant;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -82,20 +82,23 @@ class ClientController extends Controller
 
             if ($existingUser) {
                 // Update the existing user with the new data
+                $email = $request->email ?? 'client_' . $request->mobile . '@laundry.local';
                 $existingUser->update([
                     'name' => $request->name,
-                    'email' => $request->email ?? null,
+                    'email' => $email,
                     'password' => $request->password ? bcrypt($request->password) : $existingUser->password, // Update password if provided
                     'is_deleted' => 0, // Restore the user by setting is_deleted to 0
                     'role_id' => 2, // Assign default role_id
                 ]);
             } else {
                 // Create a new user if no existing user is found
+                $email = $request->email ?? 'client_' . $request->mobile . '@laundry.local';
+                $password = $request->password ? bcrypt($request->password) : bcrypt('password123');
                 User::create([
                     'name' => $request->name,
-                    'email' => $request->email ?? null,
+                    'email' => $email,
                     'mobile' => $request->mobile,
-                    'password' => $request->password ? bcrypt($request->password) : null, // Set password if provided
+                    'password' => $password,
                     'role_id' => 2, // Assign default role_id
                 ]);
             }

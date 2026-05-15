@@ -23,101 +23,109 @@ class AuthController extends Controller
 {
     
     public function splashScreens(){
-        $base_url = asset('/');
-        $splash_screens = SplashScreen::select('type','heading','content','image')->get();
-        foreach ($splash_screens as $key => $screen) {
-            if($screen['image']){
-                $screen['image'] = $base_url.$screen['image'];
+        try {
+            $base_url = asset('/');
+            $splash_screens = SplashScreen::select('type','heading','content','image')->get();
+            foreach ($splash_screens as $key => $screen) {
+                if($screen['image']){
+                    $screen['image'] = $base_url.$screen['image'];
+                }
             }
+            return response()->json([
+                'status' => true,
+                'data' => $splash_screens,
+            ],200);
+        } catch (\Throwable $e) {
+            dd($e);
         }
-        return response()->json([
-            'status' => true,
-            'data' => $splash_screens,
-        ],200);
-
     }
 
     public function sendPhoneOtp(Request $request){
-        $data = $request->all();
-        $validator = Validator::make($data, [
-            'phone' => 'required|digits_between:4,13',
-            'country_code' => "required|max:5",
-        ]);
-        
-        if($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' =>  $validator->errors()->first(),
-            ],200);
-        }
-
-        // $code = rand(1000,9999);
-        $code = '1234';
-        $date = date('Y-m-d H:i:s');
-        $currentDate = strtotime($date);
-        $futureDate = $currentDate+(60*120);
-        $phone_user = PhoneOtp::where('country_code',$data['country_code'])->where('phone',$data['phone'])->first();
-        if(!$phone_user){
-            $phone_user = new PhoneOtp();
-        }
-        $phone_user->phone = $data['phone'];
-        $phone_user->country_code = $data['country_code'];
-        $phone_user->otp = $code;
-        $phone_user->otp_expire_time = $futureDate;
-        $phone_user->save();
-        return response()->json([
-            'status' => true,
-            'message' =>  'A one-time password has been sent to your phone, please check.',
-        ],200);
+        try {
+            $data = $request->all();
+            $validator = Validator::make($data, [
+                'phone' => 'required|digits_between:4,13',
+                'country_code' => "required|max:5",
+            ]);
             
-        
-    }
-
-    public function verifyPhoneOtp(Request $request){
-        $data = $request->all();
-        $validator = Validator::make($data, [
-            'phone' => 'required|digits_between:4,13',
-            'country_code' => "required|max:5",
-            'otp' => "required|max:4",
-        ]);
-        if($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' =>  $validator->errors()->first(),
-            ],200);
-        }
-        
-        $phone_user = PhoneOtp::where('country_code',$data['country_code'])->where('phone',$data['phone'])->first();
-        if($phone_user){
-            $date = date('Y-m-d H:i:s');
-            $currentTime = strtotime($date);
-            if($phone_user->otp == $data['otp']){
-                if($currentTime < $phone_user->otp_expire_time){
-                    PhoneOtp::where('country_code',$data['country_code'])->where('phone',$data['phone'])->delete();
-                    return response()->json([
-                        'status' => true,
-                        'message' =>  'Verified successfully.',
-                    ],200);
-                }else{
-                    return response()->json([
-                        'status' => true,
-                        'message' =>  'Verification code is expired.',
-                    ],200);
-                }
-            }else{
+            if($validator->fails()) {
                 return response()->json([
                     'status' => false,
-                    'message' =>  'Invalid verification code. Please try again',
+                    'message' =>  $validator->errors()->first(),
                 ],200);
             }
 
-        }else{
+            // $code = rand(1000,9999);
+            $code = '1234';
+            $date = date('Y-m-d H:i:s');
+            $currentDate = strtotime($date);
+            $futureDate = $currentDate+(60*120);
+            $phone_user = PhoneOtp::where('country_code',$data['country_code'])->where('phone',$data['phone'])->first();
+            if(!$phone_user){
+                $phone_user = new PhoneOtp();
+            }
+            $phone_user->phone = $data['phone'];
+            $phone_user->country_code = $data['country_code'];
+            $phone_user->otp = $code;
+            $phone_user->otp_expire_time = $futureDate;
+            $phone_user->save();
             return response()->json([
-                'status' => false,
-                'message'=>'Invalid phone number. Please check and try again'
+                'status' => true,
+                'message' =>  'A one-time password has been sent to your phone, please check.',
             ],200);
+        } catch (\Throwable $e) {
+            dd($e);
         }
-        
+    }
+
+    public function verifyPhoneOtp(Request $request){
+        try {
+            $data = $request->all();
+            $validator = Validator::make($data, [
+                'phone' => 'required|digits_between:4,13',
+                'country_code' => "required|max:5",
+                'otp' => "required|max:4",
+            ]);
+            if($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' =>  $validator->errors()->first(),
+                ],200);
+            }
+            
+            $phone_user = PhoneOtp::where('country_code',$data['country_code'])->where('phone',$data['phone'])->first();
+            if($phone_user){
+                $date = date('Y-m-d H:i:s');
+                $currentTime = strtotime($date);
+                if($phone_user->otp == $data['otp']){
+                    if($currentTime < $phone_user->otp_expire_time){
+                        PhoneOtp::where('country_code',$data['country_code'])->where('phone',$data['phone'])->delete();
+                        return response()->json([
+                            'status' => true,
+                            'message' =>  'Verified successfully.',
+                        ],200);
+                    }else{
+                        return response()->json([
+                            'status' => true,
+                            'message' =>  'Verification code is expired.',
+                        ],200);
+                    }
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'message' =>  'Invalid verification code. Please try again',
+                    ],200);
+                }
+
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message'=>'Invalid phone number. Please check and try again'
+                ],200);
+            }
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function register(Request $request) 
@@ -356,7 +364,11 @@ class AuthController extends Controller
     }
 
     public function refresh() {
-        return $this->createNewToken(JWTAuth::refresh());
+        try {
+            return $this->createNewToken(JWTAuth::refresh());
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     protected function createNewToken($token){
@@ -395,85 +407,91 @@ class AuthController extends Controller
     }
 
     public function setForgotPassword(Request $request){
-        $data = $request->all();
-        $validator = Validator::make($data, [
-            'phone' => 'required|exists:users,phone|digits_between:4,13',
-            'country_code' => "required|exists:users,country_code|max:5",
-            'password' => 'required|string|confirmed|min:6',
-        ]);
-        
-        if($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' =>  $validator->errors()->first(),
-            ],200);
+        try {
+            $data = $request->all();
+            $validator = Validator::make($data, [
+                'phone' => 'required|exists:users,phone|digits_between:4,13',
+                'country_code' => "required|exists:users,country_code|max:5",
+                'password' => 'required|string|confirmed|min:6',
+            ]);
+            
+            if($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' =>  $validator->errors()->first(),
+                ],200);
+            }
+            
+            $user = User::where('phone',$data['phone'])->where('country_code',$data['country_code'])->first();
+            if($user){
+                if(Hash::check($request->password,$user->password)){
+                    return response()->json([
+                        'status' => false,
+                        'message' =>  'Cannot use your old password as new password.',
+                    ],200);
+                }else{
+                    $user->password = Hash::make($request->password);
+                    $user->save();
+                    return response()->json([
+                        'status' => true,
+                        'message' =>  'New Password set successfully.Please Login'    
+                    ],200);
+                } 
+            } 
+            else{
+                return response()->json([
+                    'status' => false,
+                    'message' =>  'Phone number user not exists'
+                ],200);
+            }
+        } catch (\Throwable $e) {
+            dd($e);
         }
-        
-        $user = User::where('phone',$data['phone'])->where('country_code',$data['country_code'])->first();
-        if($user){
-            if(Hash::check($request->password,$user->password)){
+    }
+
+    public function changePassword(Request $request){
+        try {
+            $data = $request->all();
+            $user = auth()->user();  
+            $validator = Validator::make($data, [
+                'old_password' => 'required',
+                'new_password' => 'confirmed|required|string|min:6',
+            ]);
+            if($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' =>  $validator->errors()->first()
+                ],200);
+            }
+            
+            $user = auth()->user();  
+            if(Hash::check($request->new_password,$user->password)) {
                 return response()->json([
                     'status' => false,
                     'message' =>  'Cannot use your old password as new password.',
                 ],200);
-            }else{
-                $user->password = Hash::make($request->password);
-                $user->save();
+            }
+            
+            if(!Hash::check($request->old_password,$user->password)) {
                 return response()->json([
-                    'status' => true,
-                    'message' =>  'New Password set successfully.Please Login'    
+                    'status' => false,
+                    'message' =>  'Old Password did not matched!',
+
+
                 ],200);
-            } 
-        } 
-        else{
-            return response()->json([
-                'status' => false,
-                'message' =>  'Phone number user not exists'
-            ],200);
-        }
-        
-    }
-
-    public function changePassword(Request $request){
-        $data = $request->all();
-        $user = auth()->user();  
-        $validator = Validator::make($data, [
-            'old_password' => 'required',
-            'new_password' => 'confirmed|required|string|min:6',
-        ]);
-        if($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' =>  $validator->errors()->first()
-            ],200);
-        }
-        
-        $user = auth()->user();  
-        if(Hash::check($request->new_password,$user->password)) {
-            return response()->json([
-                'status' => false,
-                'message' =>  'Cannot use your old password as new password.',
-            ],200);
-        }
-        
-        if(!Hash::check($request->old_password,$user->password)) {
-            return response()->json([
-                'status' => false,
-                'message' =>  'Old Password did not matched!',
-
-
-            ],200);
-        }
-     
-        $user->password = Hash::make($request->new_password);
-        $user->save();
-        // JWTAuth::parseToken()->invalidate(true);
-        return response()->json([
-            'status' => true,
-            'message' =>  'Password changed successfully',
-            'user' => $this->getUserDetail($user->id),
-        ],200);
+            }
          
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+            // JWTAuth::parseToken()->invalidate(true);
+            return response()->json([
+                'status' => true,
+                'message' =>  'Password changed successfully',
+                'user' => $this->getUserDetail($user->id),
+            ],200);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
     
     public function updateProfile(Request $request){
@@ -562,16 +580,24 @@ class AuthController extends Controller
 
     
     public function getUserDetail($user_id){
-        $user = User::where('id',$user_id)->first();
-        return $user;
+        try {
+            $user = User::where('id',$user_id)->first();
+            return $user;
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function logout() {
-        JWTAuth::parseToken()->invalidate(true);
-        return response()->json(array(
-            'status' => true,
-            'message' => 'User successfully signed out.'
-        ),200);
+        try {
+            JWTAuth::parseToken()->invalidate(true);
+            return response()->json(array(
+                'status' => true,
+                'message' => 'User successfully signed out.'
+            ),200);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function deleteAccount()

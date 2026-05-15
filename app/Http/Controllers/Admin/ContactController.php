@@ -15,12 +15,20 @@ class ContactController extends Controller
 {
     public function index()
     {
-        return view('admin.contacts.index');
+        try {
+            return view('admin.contacts.index');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function getallcontact(Request $request){
-        $contacts = Contact::orderBy('id','desc')->get();
-        return response()->json(['data' => $contacts]);
+        try {
+            $contacts = Contact::orderBy('id','desc')->get();
+            return response()->json(['data' => $contacts]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 

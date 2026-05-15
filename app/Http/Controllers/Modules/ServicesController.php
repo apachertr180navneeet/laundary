@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Modules;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Tenant;
+
 use App\Models\Services;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,8 +18,9 @@ class ServicesController extends Controller
 {
     public function index(Request $request)
     {
-        // Initialize the query for the Services model
-        $query = Services::query();
+        try {
+            // Initialize the query for the Services model
+            $query = Services::query();
 
         // Check if the request is an AJAX call
         if ($request->ajax()) {
@@ -48,6 +49,9 @@ class ServicesController extends Controller
         // Handle non-AJAX requests: fetch services and render the view
         $services = $query->orderBy('id', 'desc')->paginate(10);
         return view('admin.service.service', compact('services'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function addServices(Request $request)
@@ -114,15 +118,20 @@ class ServicesController extends Controller
 
     public function edit($id)
     {
-        $services = Services::findOrFail($id);
-        return response()->json($services);
+        try {
+            $services = Services::findOrFail($id);
+            return response()->json($services);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
     public function editServices(Request $request, $id)
     {
-        // Custom validation messages
-        $messages = [
+        try {
+            // Custom validation messages
+            $messages = [
             'servicesname.required' => 'The services name is required.',
             'servicesname.string' => 'The services name must be a string.',
             'servicesname.max' => 'The services name may not be greater than 255 characters.',
@@ -177,11 +186,15 @@ class ServicesController extends Controller
             'success' => true,
             'message' => 'Services updated successfully'
         ]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function search(Request $request)
     {
-        $search = $request->input('search');
+        try {
+            $search = $request->input('search');
 
         $query = Services::query();
 
@@ -198,6 +211,9 @@ class ServicesController extends Controller
             'services' => $services->items(),
             'pagination' => (string) $services->links(),
         ]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 }

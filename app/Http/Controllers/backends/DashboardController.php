@@ -10,7 +10,11 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $clientCounts = User::where('role_id', 2)->count();
-        return view('backend.dashboard', compact('clientCounts'));
+        try {
+            $clientCounts = User::where('role_id', 2)->count();
+            return view('backend.dashboard', compact('clientCounts'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 }

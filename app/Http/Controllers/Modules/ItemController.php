@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Modules;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Tenant;
+
 use App\Models\Item;
 use App\Models\ItemDetail;
 use App\Models\Category;
@@ -21,8 +21,9 @@ class ItemController extends Controller
     //
     public function index(Request $request)
     {
-        // Initialize the query for the ItemDetail model
-        $query = ItemDetail::query();
+        try {
+            // Initialize the query for the ItemDetail model
+            $query = ItemDetail::query();
 
         // Join with items table to get item name
         $query->join('items', 'item_detail.item_id', '=', 'items.id')
@@ -32,21 +33,29 @@ class ItemController extends Controller
         $items = $query->orderBy('item_detail.id', 'desc')->paginate(10);
 
         return view('admin.item.item', compact('items'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
     public function addItems(Request $request)
     {
-        $categorys = Category::get();
-        $services = Services::get();
-        return view('admin.item.itemAdd', compact('categorys','services'));
+        try {
+            $categorys = Category::get();
+            $services = Services::get();
+            return view('admin.item.itemAdd', compact('categorys','services'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
     public function storeItems(Request $request)
     {
-        // Validation rules and messages
-        $rules = [
+        try {
+            // Validation rules and messages
+            $rules = [
             'item_name' => 'required|string|max:255',
             'itemdetail.*.category' => 'required|string|exists:categories,name',
             'itemdetail.*.service.*' => 'required|string|exists:services,name',
@@ -104,23 +113,31 @@ class ItemController extends Controller
 
         // Redirect back with success message
         return redirect()->route('items')->with('success', 'Item successfully added');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
     public function editItem(Request $request , $id)
     {
-        $Intemdetails = ItemDetail::join('items', 'item_detail.item_id', '=', 'items.id')
-        ->select('item_detail.*', 'items.name as item_name')
-        ->where('item_detail.id', $id)
-        ->first();
+        try {
+            $Intemdetails = ItemDetail::join('items', 'item_detail.item_id', '=', 'items.id')
+            ->select('item_detail.*', 'items.name as item_name')
+            ->where('item_detail.id', $id)
+            ->first();
 
-        return view('admin.item.itemEdit', compact('Intemdetails'));
+            return view('admin.item.itemEdit', compact('Intemdetails'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function updateItems(Request $request)
     {
-        // Step 1: Define Validation Rules and Messages
-        $rules = [
+        try {
+            // Step 1: Define Validation Rules and Messages
+            $rules = [
             'item_name' => 'required|string|max:255',
             'item_category' => 'required|string',
             'item_service' => 'required|string',
@@ -148,6 +165,9 @@ class ItemController extends Controller
 
         // Redirect back with success message
         return redirect()->route('items')->with('success', 'Item successfully added');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 

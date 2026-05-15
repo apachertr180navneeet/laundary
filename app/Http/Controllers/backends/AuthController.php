@@ -22,190 +22,249 @@ class AuthController extends Controller
 
     public function adminLogin()
     {
-        if (!empty(Auth::user()->id)) {
-            return view('backend.dashboard');
+        try {
+            if (!empty(Auth::user()->id)) {
+                return view('backend.dashboard');
+            }
+            return view('backend.auth.login');
+        } catch (\Throwable $e) {
+            dd($e);
         }
-        return view('backend.auth.login');
     }
 
     public function adminLoginPost(Request $request)
     {
-        $validated = $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
+        try {
+            $validated = $request->validate([
+                'email' => 'required',
+                'password' => 'required',
+            ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('dashboard')->with('success', 'Login Successfully');
-        } else {
-            return redirect()->route('admin.login')->with('error', 'Login Failed | User Name or Password Not Match');
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return redirect()->route('dashboard')->with('success', 'Login Successfully');
+            } else {
+                return redirect()->route('admin.login')->with('error', 'Login Failed | User Name or Password Not Match');
+            }
+        } catch (\Throwable $e) {
+            dd($e);
         }
     }
 
     public function changePassword()
     {
-        $user = Auth::user();
-        if ($user->is_admin == '0') {
+        try {
+            $user = Auth::user();
+            if ($user->is_admin == '0') {
+            }
+            return view('backend.auth.changePassword');
+        } catch (\Throwable $e) {
+            dd($e);
         }
-        return view('backend.auth.changePassword');
     }
 
     public function changePasswordPost(Request $request)
     {
-        // Custom validation rule for checking the old password
-        $request->validate([
-            'password' => ['required', function ($attribute, $value, $fail) {
-                if (!Hash::check($value, Auth::user()->password)) {
-                    return $fail(__('The old password is incorrect.'));
-                }
-            }],
-            'new_password' => 'required|min:8',
-            'confirm_password' => 'required|same:new_password',
-        ]);
+        try {
+            // Custom validation rule for checking the old password
+            $request->validate([
+                'password' => ['required', function ($attribute, $value, $fail) {
+                    if (!Hash::check($value, Auth::user()->password)) {
+                        return $fail(__('The old password is incorrect.'));
+                    }
+                }],
+                'new_password' => 'required|min:8',
+                'confirm_password' => 'required|same:new_password',
+            ]);
 
-        $user = Auth::user();
-        $user->update([
-            'password' => bcrypt($request->new_password),
-        ]);
+            $user = Auth::user();
+            $user->update([
+                'password' => bcrypt($request->new_password),
+            ]);
 
-        return redirect()->route('dashboard')->with('success', 'Password changed successfully');
+            return redirect()->route('dashboard')->with('success', 'Password changed successfully');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function forgetPassword()
     {
-        return view('backend.auth.forgetPassword');
+        try {
+            return view('backend.auth.forgetPassword');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function forgetPasswordPost(Request $request)
     {
+        try {
+            $emailotp = $request->input('email');
+            $otp = mt_rand(100000, 999999);
+            DB::table('password_resets')->updateOrInsert(
+                ['email' => $emailotp],
+                ['token' => $otp, 'created_at' => now()]
+            );
+            // \Mail::to($email)->send(new ResetPasswordMail($otp));
 
-        $emailotp = $request->input('email');
-        $otp = mt_rand(100000, 999999);
-        DB::table('password_resets')->updateOrInsert(
-            ['email' => $emailotp],
-            ['token' => $otp, 'created_at' => now()]
-        );
-        // \Mail::to($email)->send(new ResetPasswordMail($otp));
-
-        return view('backend.auth.otp');
+            return view('backend.auth.otp');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function createOTP()
     {
-        return view('backend.auth.otp');
+        try {
+            return view('backend.auth.otp');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function storeOTP(Request $request)
     {
-        $email = $request->input('email');
-        $otp = $request->input('otp');
+        try {
+            $email = $request->input('email');
+            $otp = $request->input('otp');
 
 
-        $validOtp = DB::table('password_resets')
-            ->where('email', $email)
-            ->where('token', $otp)
-            ->where('created_at', '>', now()->subMinutes(config('auth.passwords.users.expire')))
-            ->exists();
+            $validOtp = DB::table('password_resets')
+                ->where('email', $email)
+                ->where('token', $otp)
+                ->where('created_at', '>', now()->subMinutes(config('auth.passwords.users.expire')))
+                ->exists();
 
-        if ($validOtp) {
-            DB::table('password_resets')->where('email', $email)->delete();
-            auth()->login(User::where('email', $email)->first());
-            return redirect()->route('dashboard');
-        } else {
-            // return "Some Thing Went Wrong";
-            return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+            if ($validOtp) {
+                DB::table('password_resets')->where('email', $email)->delete();
+                auth()->login(User::where('email', $email)->first());
+                return redirect()->route('dashboard');
+            } else {
+                // return "Some Thing Went Wrong";
+                return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+            }
+        } catch (\Throwable $e) {
+            dd($e);
         }
     }
 
     public function logout()
     {
-        Auth::logout();
-        return redirect('/admin');
+        try {
+            Auth::logout();
+            return redirect('/admin');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
     public function register()
     {
-        $getrole = Role::get(['name']);
-        return view('backend.users.create', compact('getrole'));
+        try {
+            $getrole = Role::get(['name']);
+            return view('backend.users.create', compact('getrole'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function registerPost(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'mobile' => 'required',
-            'password' => 'required',
-            'role' => 'required'
+        try {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+                'mobile' => 'required',
+                'password' => 'required',
+                'role' => 'required'
 
-        ]);
-        $input = $request->all();
-        $password = Hash::make($input['password']);
-        $user = new User;
-        $user->name = $request->name;
-        $user->mobile = $request->mobile;
-        $user->email = $request->email;
-        $user->password = $password;
-        $user->role = $request->role;
-        $userRole = $request->role;
-        $user->assignRole($userRole);
-        $user->save();
-        return redirect()->route('list.register')->with('success', 'User Add Successfully');
+            ]);
+            $input = $request->all();
+            $password = Hash::make($input['password']);
+            $user = new User;
+            $user->name = $request->name;
+            $user->mobile = $request->mobile;
+            $user->email = $request->email;
+            $user->password = $password;
+            $user->role = $request->role;
+            $userRole = $request->role;
+            $user->assignRole($userRole);
+            $user->save();
+            return redirect()->route('list.register')->with('success', 'User Add Successfully');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function registerlist(Request $request)
     {
-        if ($request->ajax()) {
-            $data =  User::select('*');
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $edit = route('edit.register', ['id' => $row->id]);
-                    $delete = route('delete.register', ['id' => $row->id]);
-                    $editbtn = '';
-                    $editbtn = '<a class="edit btn btn-outline-success btn-sm" href="' . $edit . '" title="Edit"><i class="fa fa-edit" ></i></a>';
-                    $deletebtn = '';
-                    $deletebtn =  "<a href='" . $delete . "'  id='remove-page' class='btn btn-outline-danger btn-sm  remove-page-$row->id' title='Delete' onClick='removePage($row->id)'><i class='fa fa-trash'></i></a>";
-                    return $editbtn . '&nbsp;' . $deletebtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        try {
+            if ($request->ajax()) {
+                $data =  User::select('*');
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function ($row) {
+                        $edit = route('edit.register', ['id' => $row->id]);
+                        $delete = route('delete.register', ['id' => $row->id]);
+                        $editbtn = '';
+                        $editbtn = '<a class="edit btn btn-outline-success btn-sm" href="' . $edit . '" title="Edit"><i class="fa fa-edit" ></i></a>';
+                        $deletebtn = '';
+                        $deletebtn =  "<a href='" . $delete . "'  id='remove-page' class='btn btn-outline-danger btn-sm  remove-page-$row->id' title='Delete' onClick='removePage($row->id)'><i class='fa fa-trash'></i></a>";
+                        return $editbtn . '&nbsp;' . $deletebtn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+            return view('backend.users.list');
+        } catch (\Throwable $e) {
+            dd($e);
         }
-        return view('backend.users.list');
     }
 
     public function registeredit($id)
     {
-        $user = User::find($id);
-        $getrole = Role::get(['name']);
-        $userRole = $user->roles->pluck('name', 'name')->all();
-        return view('backend.users.create', compact('user', 'getrole', 'userRole'));
+        try {
+            $user = User::find($id);
+            $getrole = Role::get(['name']);
+            $userRole = $user->roles->pluck('name', 'name')->all();
+            return view('backend.users.create', compact('user', 'getrole', 'userRole'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function registerupdate(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'mobile' => 'required',
-            'role' => 'required'
+        try {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+                'mobile' => 'required',
+                'role' => 'required'
 
-        ]);
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->mobile = $request->mobile;
-        $user->email = $request->email;
-        DB::table('model_has_roles')->where('model_id', $id)->delete();
-        $userRole = $request->role;
-        $user->assignRole($userRole);
-        $user->update();
-        return redirect()->route('list.register')->with('success', 'User Updated Successfully');
+            ]);
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->mobile = $request->mobile;
+            $user->email = $request->email;
+            DB::table('model_has_roles')->where('model_id', $id)->delete();
+            $userRole = $request->role;
+            $user->assignRole($userRole);
+            $user->update();
+            return redirect()->route('list.register')->with('success', 'User Updated Successfully');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function registerdelete($id)
     {
-        $delete = User::find($id)->delete();
-        return redirect()->route('list.register')->with('success', 'User Deleted Successfully');
+        try {
+            $delete = User::find($id)->delete();
+            return redirect()->route('list.register')->with('success', 'User Deleted Successfully');
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 }

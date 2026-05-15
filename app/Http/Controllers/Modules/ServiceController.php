@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Modules;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
-use App\Models\Tenant;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -15,7 +15,8 @@ class ServiceController extends Controller
     //
     public function index(Request $request)
     {
-        $query = Service::query();
+        try {
+            $query = Service::query();
 
         if ($request->ajax()) {
             $search = $request->input('search');
@@ -33,6 +34,9 @@ class ServiceController extends Controller
 
         $services = $query->orderBy('id', 'desc')->paginate(10);
         return view('admin.service', ['services' => $services]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function addService(Request $request)
@@ -66,9 +70,13 @@ class ServiceController extends Controller
 
     public function edit($id)
     {
-        $service = Service::findOrFail($id);
-        // You can pass $service to the view for editing
-        return view('admin.service', ['services' => $service]);
+        try {
+            $service = Service::findOrFail($id);
+            // You can pass $service to the view for editing
+            return view('admin.service', ['services' => $service]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function updateService(Request $request, $id)

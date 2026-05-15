@@ -147,31 +147,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Tenants
-        Schema::create('tenants', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->boolean('is_deleted')->default(0);
-            $table->boolean('is_active')->default(1);
-            $table->timestamps();
-        });
 
-        // Subscriptions
-        Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->onDelete('cascade');
-            $table->date('starting_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->timestamps();
-        });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('subscriptions');
-        Schema::dropIfExists('tenants');
+
         Schema::dropIfExists('invoices');
         Schema::dropIfExists('payment_details');
         Schema::dropIfExists('lundary_order_item');

@@ -37,12 +37,20 @@ class AdminAuthController extends Controller
 
     public function login()
     {
-        return view("admin.auth.login");
+        try {
+            return view("admin.auth.login");
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function registration()
     {
-        return view("admin.auth.registration");
+        try {
+            return view("admin.auth.registration");
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function postLogin(Request $request)
@@ -78,30 +86,42 @@ class AdminAuthController extends Controller
 
     public function postRegistration(Request $request)
     {
-        $request->validate([
-            "name" => "required",
-            "email" => "required|email|unique:users",
-            "password" => "required|min:6",
-        ]);
+        try {
+            $request->validate([
+                "name" => "required",
+                "email" => "required|email|unique:users",
+                "password" => "required|min:6",
+            ]);
 
-        $data = $request->all();
-        $check = $this->create($data);
+            $data = $request->all();
+            $check = $this->create($data);
 
-        return redirect("admin.dashboard")->with("success","Great! You have Successfully loggedin");
+            return redirect("admin.dashboard")->with("success","Great! You have Successfully loggedin");
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function create(array $data)
     {
-        return User::create([
-            "name" => $data["name"],
-            "email" => $data["email"],
-            "password" => Hash::make($data["password"]),
-        ]);
+        try {
+            return User::create([
+                "name" => $data["name"],
+                "email" => $data["email"],
+                "password" => Hash::make($data["password"]),
+            ]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function showForgetPasswordForm()
     {
-        return view("admin.auth.forgot-password");
+        try {
+            return view("admin.auth.forgot-password");
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function submitForgetPasswordForm(Request $request)
@@ -174,7 +194,11 @@ class AdminAuthController extends Controller
 
     public function changePassword()
     {
-        return view("admin.auth.change-password");
+        try {
+            return view("admin.auth.change-password");
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function updatePassword(Request $request)
@@ -269,7 +293,11 @@ class AdminAuthController extends Controller
 
     public function adminDashboard()
     {
-        return view("admin.dashboard.index");
+        try {
+            return view("admin.dashboard.index");
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 

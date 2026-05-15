@@ -13,7 +13,7 @@ use App\Models\{ // Grouped imports for models
     Discount,
     OrderItem,
     Service,
-    Tenant,
+
     Operations,
     Item,
     ItemDetail,
@@ -168,7 +168,7 @@ class OrderController extends Controller
      */
     public function addOrder(Request $request)
     {
-        //try {
+        try {
             // Step 1: Validate and retrieve the incoming request data
             $validatedData = $request->validate([
                 'client_num' => 'required|numeric',
@@ -354,10 +354,9 @@ class OrderController extends Controller
             // Step 8: Redirect to order view
             return redirect()->route('viewOrder');
 
-        // } catch (\Exception $e) {
-        //     // Handle errors and return back with error message
-        //     return back()->withErrors($e->getMessage());
-        // }
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
@@ -370,7 +369,7 @@ class OrderController extends Controller
      */
     public function updateOrder(Request $request, $id)
     {
-        //try {
+        try {
             // Step 1: Validate and retrieve the incoming request data
             $validatedData = $request->validate([
                 'client_num' => 'required|numeric',
@@ -581,10 +580,9 @@ class OrderController extends Controller
 
             // Redirect to order view page
             return redirect()->route('viewOrder')->with('success', 'Order updated successfully.');
-        // } catch (\Exception $e) {
-        //     // Handle errors and return back with error message
-        //     return back()->withErrors($e->getMessage());
-        // }
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -594,8 +592,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-
-        $productItems = Item::with(['itemDetails' => function($query) {
+        try {
+            $productItems = Item::with(['itemDetails' => function($query) {
             $query->select('id', 'item_id', 'category', 'service', 'price');
         }])->get();
 
@@ -622,12 +620,16 @@ class OrderController extends Controller
         $currenttime = $currentdatetime->toTimeString();
 
         return view('admin.EditOrder', compact('groupedProductItems', 'discounts', 'services', 'timeSlots', 'currentdate', 'currenttime'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function getOperationData($pid, $pname, $others = [])
     {
-        // Retrieve operation data based on provided product ID and name
-        $data = Operations::select('operations.id as op_id', 'operations.name as op_name', 'pc.price', 'pc.id as item_cat_id', 'pc.product_item_id as pid')
+        try {
+            // Retrieve operation data based on provided product ID and name
+            $data = Operations::select('operations.id as op_id', 'operations.name as op_name', 'pc.price', 'pc.id as item_cat_id', 'pc.product_item_id as pid')
             ->where([
                 'pc.product_item_id' => $pid,
                 'pc.name' => $pname,
@@ -637,16 +639,22 @@ class OrderController extends Controller
 
         // Return the operation view with data and additional parameters
         return view('admin.operation.operationview', ['data' => $data, "others" => $others])->render();
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function getServiceData(Request $request)
     {
-
-        // Retrieve parameters from request and call getOperationData
-        $pId = $request->id;
+        try {
+            // Retrieve parameters from request and call getOperationData
+            $pId = $request->id;
         $pname = $request->name;
         $others = $request->others ?? [];
         return $this->getOperationData($pId, $pname, $others);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function fetchClientName(Request $request)
@@ -706,7 +714,8 @@ class OrderController extends Controller
 
     public function getServices(Request $request)
     {
-        $item = $request->input('item');
+        try {
+            $item = $request->input('item');
         $type = $request->input('type');
 
         // Fetch the related product category
@@ -720,12 +729,16 @@ class OrderController extends Controller
         // dd($services);
 
         return response()->json(['services' => $services]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
     public function getPrice(Request $request)
     {
-        $item = $request->input('item');
+        try {
+            $item = $request->input('item');
         $type = $request->input('type');
         $service = $request->input('service');
 
@@ -738,12 +751,16 @@ class OrderController extends Controller
         $price = $productCategory ? $productCategory->price : null;
 
         return response()->json(['price' => $price]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function editOrder(Request $request, $id)
     {
-        // Fetching the order and joining user information
-        $order = Order::select("users.name", "users.mobile", "orders.*")
+        try {
+            // Fetching the order and joining user information
+            $order = Order::select("users.name", "users.mobile", "orders.*")
             ->join('users', 'users.id', '=', 'orders.user_id')
             ->findOrFail($id);
 
@@ -800,12 +817,16 @@ class OrderController extends Controller
 
         // Passing all necessary data to the view
         return view('admin.orderupdate', compact('order', 'orderItems', 'groupedProductItems', 'discounts', 'services', 'timeSlots', 'currentdate', 'currenttime','total_amount','orderDiscount','orderDiscountamount','discountAmount'));
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
     public function getAllOperationData($pid, $pname, $others = [])
     {
-        $data = Operations::select('operations.id as op_id', 'operations.name as op_name', 'pc.price', 'pc.id as item_cat_id', 'pc.product_item_id as pid')
+        try {
+            $data = Operations::select('operations.id as op_id', 'operations.name as op_name', 'pc.price', 'pc.id as item_cat_id', 'pc.product_item_id as pid')
             ->where([
                 'pc.product_item_id' => $pid,
                 'pc.name' => $pname,
@@ -825,17 +846,24 @@ class OrderController extends Controller
             }
         }
         return view('admin.operation.editoperationview', ['data' => $data, "others" => $others])->render();
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
 
 
     public function getAllServiceData(Request $request)
     {
-        $pId = $request->id;
-        $pname = $request->name;
-        $others = $request->others ?? [];
-        // dd($others);
-        return $this->getAllOperationData($pId, $pname, $others);
+        try {
+            $pId = $request->id;
+            $pname = $request->name;
+            $others = $request->others ?? [];
+            // dd($others);
+            return $this->getAllOperationData($pId, $pname, $others);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     public function OrderDetail(Request $request, $orderId)

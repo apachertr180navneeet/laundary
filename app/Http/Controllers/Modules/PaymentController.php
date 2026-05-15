@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Modules;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentDetail;
 use App\Models\Order;
-use App\Models\Tenant;
+
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Throwable;
@@ -28,7 +28,8 @@ class PaymentController extends Controller
 
     public function index(Request $request)
     {
-        $query = PaymentDetail::select('payment_details.*', 'users.mobile', 'orders.order_number', 'orders.total_price', 'orders.id as order_prim_id')
+        try {
+            $query = PaymentDetail::select('payment_details.*', 'users.mobile', 'orders.order_number', 'orders.total_price', 'orders.id as order_prim_id')
             ->join('orders', 'orders.id', '=', 'payment_details.order_id')
             ->join('users', 'users.id', '=', 'orders.user_id')
             ->where('orders.is_deleted', 0)
@@ -59,6 +60,9 @@ class PaymentController extends Controller
         $payments = $query->orderBy('payment_details.updated_at', 'desc')->paginate(10);
 
         return view('admin.payment', ['payments' => $payments]);
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
     private function generateInvoiceNumber()
     {

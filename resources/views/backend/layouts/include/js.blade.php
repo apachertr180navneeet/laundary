@@ -10,10 +10,8 @@
 <script src="{{url('/theam/assets/vendor/libs/hammer/hammer.js')}}"></script>
 <script src="{{url('/theam/assets/vendor/js/menu.js')}}"></script>
 <script src="{{url('/theam/assets/js/main.js')}}"></script>
-<script src="{{url('/theam/assets/vendor/js/helpers.js')}}"></script>
 <script src="{{url('/theam/assets/vendor/js/template-customizer.js')}}"></script>
 <script src="{{url('/theam/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{url('/theam/assets/vendor/js/helpers.js')}}"></script>
 <script src="{{url('/theam/assets/js/forms-editors.js')}}"></script>
 {{--  <script src="{{url('/theam/assets/vendor/libs/quill/katex.js')}}"></script>
 <script src="{{url('/theam/assets/vendor/libs/quill/quill.js')}}"></script>  --}}

@@ -17,7 +17,11 @@ class PageController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -43,7 +47,11 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -54,7 +62,11 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -65,7 +77,11 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -105,6 +121,10 @@ class PageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            //
+        } catch (\Throwable $e) {
+            dd($e);
+        }
     }
 }
