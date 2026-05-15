@@ -2,7 +2,7 @@
 
 
 namespace App\Http\Controllers\Modules;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 
@@ -50,7 +50,7 @@ class ServicesController extends Controller
         $services = $query->orderBy('id', 'desc')->paginate(10);
         return view('erp.service.service', compact('services'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ class ServicesController extends Controller
             // Redirect to the services list with a success message
             return redirect()->route('services')->with('success', 'Services added successfully');
         } catch (\Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
             // Log any errors that occur during the process
             \Log::error($throwable->getMessage());
             // Redirect back with an error message
@@ -112,7 +112,7 @@ class ServicesController extends Controller
             $services->delete();
             return response()->json(['message' => 'Services deleted successfully']);
         } catch (\Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ class ServicesController extends Controller
             $services = Services::findOrFail($id);
             return response()->json($services);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -187,7 +187,7 @@ class ServicesController extends Controller
             'message' => 'Services updated successfully'
         ]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -212,9 +212,12 @@ class ServicesController extends Controller
             'pagination' => (string) $services->links(),
         ]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
 }
+
+
+
 

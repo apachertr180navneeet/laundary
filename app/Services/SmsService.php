@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use Twilio\Rest\Client;
+use Illuminate\Support\Facades\Log;
 
 class SmsService
 {
@@ -12,23 +12,21 @@ class SmsService
 
     public function __construct()
     {
-        $this->MSG91_API_KEY = env('MSG91_API_KEY');
-        $this->MSG91_SENDER_ID = env('MSG91_SENDER_ID');
-        $this->MSG91_route = env('MSG91_route');
-        $this->MSG91_COUNTRY = env('MSG91_COUNTRY');
+        $this->MSG91_API_KEY = config('services.msg91.api_key');
+        $this->MSG91_SENDER_ID = config('services.msg91.sender_id');
+        $this->MSG91_route = config('services.msg91.route');
+        $this->MSG91_COUNTRY = config('services.msg91.country');
     }
 
     public function sendSms($mobile, $templateId, $variables)
     {
         $authKey = $this->MSG91_API_KEY;
         $senderId = $this->MSG91_SENDER_ID;
-        $route = $this->MSG91_route; // Transactional route
-        $country = $this->MSG91_COUNTRY; // Country code for India
+        $route = $this->MSG91_route;
+        $country = $this->MSG91_COUNTRY;
 
-        // API URL
         $url = "https://api.msg91.com/api/v5/flow/";
 
-        // Prepare the payload
         $payload = array(
             'flow_id' => $templateId,
             'sender' => $senderId,
@@ -37,12 +35,10 @@ class SmsService
                     'mobiles' => $country . $mobile,
                     'name' => $variables['name'],
                     'ordernumber' => $variables['ordernumber']
-                    // Add more variables if your template has more placeholders
                 )
             )
         );
 
-        // Initialize cURL
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -52,15 +48,13 @@ class SmsService
             "Content-Type: application/json"
         ));
 
-        // Execute cURL
         $response = curl_exec($ch);
-        if(curl_errno($ch)) {
-            echo 'cURL error: ' . curl_error($ch);
+        if (curl_errno($ch)) {
+            Log::error('MSG91 SMS cURL error: ' . curl_error($ch));
         } else {
-            echo 'Response: ' . $response;
+            Log::info('MSG91 SMS Response: ' . $response);
         }
 
-        // Close cURL
         curl_close($ch);
     }
 }

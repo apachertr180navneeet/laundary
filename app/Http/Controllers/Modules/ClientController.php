@@ -2,7 +2,7 @@
 
 
 namespace App\Http\Controllers\Modules;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 
@@ -93,7 +93,7 @@ class ClientController extends Controller
             } else {
                 // Create a new user if no existing user is found
                 $email = $request->email ?? 'client_' . $request->mobile . '@laundry.local';
-                $password = $request->password ? bcrypt($request->password) : bcrypt('password123');
+                $password = $request->password ? bcrypt($request->password) : bcrypt(config('app.default_password', 'password123'));
                 User::create([
                     'name' => $request->name,
                     'email' => $email,
@@ -180,8 +180,10 @@ class ClientController extends Controller
             $client->update(['is_deleted' => 1]);
             return response()->json(['success' => true,'message' => 'Client deleted successfully']);
         } catch (\Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
         }
     }
 }
+
+
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\backends;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -21,7 +21,7 @@ class HomeController extends Controller
             }
             return view('erp.profile');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -34,7 +34,7 @@ class HomeController extends Controller
             $user = User::find($id);
             return view('erp.updateProfile', compact('user'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -68,8 +68,10 @@ class HomeController extends Controller
 
             return redirect()->route('myProfile')->with('success', 'Profile updated successfully');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
+
+
 

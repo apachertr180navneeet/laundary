@@ -2,7 +2,7 @@
 
 
 namespace App\Http\Controllers\Modules;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 
@@ -45,7 +45,7 @@ class CategoriesController extends Controller
         $categories = $query->orderBy('id', 'desc')->paginate(10);
         return view('erp.category.category', compact('categories'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -110,7 +110,7 @@ class CategoriesController extends Controller
             $category->delete();
             return response()->json(['message' => 'Category deleted successfully']);
         } catch (\Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
         }
     }
 
@@ -120,7 +120,7 @@ class CategoriesController extends Controller
             $category = Category::findOrFail($id);
             return response()->json($category);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -193,7 +193,7 @@ class CategoriesController extends Controller
             'message' => 'Category updated successfully'
         ]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -218,9 +218,12 @@ class CategoriesController extends Controller
             'pagination' => (string) $categories->links(),
         ]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
 }
+
+
+
 

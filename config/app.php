@@ -185,4 +185,6 @@ return [
         'Helper' => App\Helpers\Helper::class,
     ])->toArray(),
 
+    'default_password' => env('DEFAULT_USER_PASSWORD', 'password123'),
+
 ];

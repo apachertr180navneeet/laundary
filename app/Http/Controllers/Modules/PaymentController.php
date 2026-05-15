@@ -61,7 +61,7 @@ class PaymentController extends Controller
 
         return view('erp.payment', ['payments' => $payments]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
     private function generateInvoiceNumber()
@@ -182,11 +182,11 @@ class PaymentController extends Controller
                 CURLOPT_POSTFIELDS => $payload,
                 CURLOPT_HTTPHEADER => [
                     'accept: application/json',
-                    'authkey: 426794Akjeezy8u669e32f2P1',
+                    'authkey: ' . config('services.msg91.authkey', '426794Akjeezy8u669e32f2P1'),
                     'content-type: application/json',
-                    'Cookie: PHPSESSID=kgm8ohaofmr3v04i9gruu0kjs6'
+                    'Cookie: ' . config('services.msg91.cookie', 'PHPSESSID=kgm8ohaofmr3v04i9gruu0kjs6')
                 ],
-                CURLOPT_SSL_VERIFYPEER => false, // Disable SSL verification
+                CURLOPT_SSL_VERIFYPEER => true,
             ]);
 
             $response = curl_exec($curl);
@@ -209,4 +209,7 @@ class PaymentController extends Controller
         }
     }
 }
+
+
+
 

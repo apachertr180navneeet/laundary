@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\App;
-
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
@@ -18,7 +18,7 @@ class UserController extends Controller
             //dd($tenants->toArray());
             return view('erp.users.index',['users'=>$users]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -30,7 +30,7 @@ class UserController extends Controller
         try {
             return view('erp.users.create');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ class UserController extends Controller
             $user = User::create($validatedData);
             return redirect()->route('users.index');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ class UserController extends Controller
         try {
             //
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ class UserController extends Controller
         try {
             //
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -87,7 +87,7 @@ class UserController extends Controller
         try {
             //
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -99,8 +99,10 @@ class UserController extends Controller
         try {
             //
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
+
+
 

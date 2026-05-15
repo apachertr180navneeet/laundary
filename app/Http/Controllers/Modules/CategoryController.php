@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Modules;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -29,7 +29,7 @@ class CategoryController extends Controller
         // dd($clothes_data);
         return view('erp.categorylist', ['clothes_datas' => $clothes_datas, 'upholstery_datas' => $upholstery_datas, 'footwearandbags' => $footwearandbags, 'others' => $others, 'services' => $services, 'laundries' => $laundries]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -52,7 +52,7 @@ class CategoryController extends Controller
         // Return data as JSON response
         return response()->json($data);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ class CategoryController extends Controller
         // Return data as JSON response
         return response()->json($data);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ class CategoryController extends Controller
         // Return data as JSON response
         return response()->json($data);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -120,7 +120,7 @@ class CategoryController extends Controller
         // Return data as JSON response
         return response()->json($data);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
     public function fetchLaundryData(Request $request)
@@ -142,7 +142,7 @@ class CategoryController extends Controller
         // Return data as JSON response
         return response()->json($data);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -183,7 +183,7 @@ class CategoryController extends Controller
             $producttypes = ProductType::all();
             return view('erp.category', ['products' => $products, 'services' => $services, 'producttypes' => $producttypes]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -202,10 +202,10 @@ class CategoryController extends Controller
                 if ($available_data) {
                     $id = $available_data->id;
                 } else {
+                    $data = [];
                     if ($request->hasFile('image.' . $cat_key . '.' . $key)) {
                         $image = $request->file('image.' . $cat_key . '.' . $key);
                         $imageName = time() . '_' . $image->getClientOriginalName();
-                        // dd($imageName);
                         $image->move(public_path('images/categories_img'), $imageName);
                         $data['image'] = $imageName;
                     }
@@ -230,8 +230,11 @@ class CategoryController extends Controller
         // return redirect()->back();
         return redirect()->route('categorylist')->with('success', 'Categories and items added successfully');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
+
+
+
 

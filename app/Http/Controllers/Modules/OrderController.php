@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Modules;
-
 // Importing necessary classes and models
 use App\Http\Controllers\Controller; // Base controller
 use App\Models\{ // Grouped imports for models
@@ -13,8 +12,6 @@ use App\Models\{ // Grouped imports for models
     Discount,
     OrderItem,
     Service,
-
-    Operations,
     Item,
     ItemDetail,
     Services,
@@ -22,6 +19,7 @@ use App\Models\{ // Grouped imports for models
     LundaryOrderItem,
     Invoice
 };
+use App\Models\Service as Operations;
 
 
 
@@ -141,11 +139,11 @@ class OrderController extends Controller
             CURLOPT_POSTFIELDS => $payload,
             CURLOPT_HTTPHEADER => [
                 'accept: application/json',
-                'authkey: 426794Akjeezy8u669e32f2P1',
+                'authkey: ' . config('services.msg91.authkey', '426794Akjeezy8u669e32f2P1'),
                 'content-type: application/json',
-                'Cookie: PHPSESSID=kgm8ohaofmr3v04i9gruu0kjs6'
+                'Cookie: ' . config('services.msg91.cookie', 'PHPSESSID=kgm8ohaofmr3v04i9gruu0kjs6')
             ],
-            CURLOPT_SSL_VERIFYPEER => false, // Disable SSL verification
+            CURLOPT_SSL_VERIFYPEER => true,
         ]);
 
         $response = curl_exec($curl);
@@ -355,7 +353,7 @@ class OrderController extends Controller
             return redirect()->route('viewOrder');
 
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -581,7 +579,7 @@ class OrderController extends Controller
             // Redirect to order view page
             return redirect()->route('viewOrder')->with('success', 'Order updated successfully.');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -621,7 +619,7 @@ class OrderController extends Controller
 
         return view('erp.EditOrder', compact('groupedProductItems', 'discounts', 'services', 'timeSlots', 'currentdate', 'currenttime'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -640,7 +638,7 @@ class OrderController extends Controller
         // Return the operation view with data and additional parameters
         return view('erp.operation.operationview', ['data' => $data, "others" => $others])->render();
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -653,7 +651,7 @@ class OrderController extends Controller
         $others = $request->others ?? [];
         return $this->getOperationData($pId, $pname, $others);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -730,7 +728,7 @@ class OrderController extends Controller
 
         return response()->json(['services' => $services]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -752,7 +750,7 @@ class OrderController extends Controller
 
         return response()->json(['price' => $price]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -818,7 +816,7 @@ class OrderController extends Controller
         // Passing all necessary data to the view
         return view('erp.orderupdate', compact('order', 'orderItems', 'groupedProductItems', 'discounts', 'services', 'timeSlots', 'currentdate', 'currenttime','total_amount','orderDiscount','orderDiscountamount','discountAmount'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -847,7 +845,7 @@ class OrderController extends Controller
         }
         return view('erp.operation.editoperationview', ['data' => $data, "others" => $others])->render();
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -862,7 +860,7 @@ class OrderController extends Controller
             // dd($others);
             return $this->getAllOperationData($pId, $pname, $others);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -903,7 +901,7 @@ class OrderController extends Controller
             ]);
 
         } catch (Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
             // Catch any exceptions and redirect back with an error message
             return redirect()->back()->with('error', $throwable->getMessage());
         }
@@ -957,7 +955,7 @@ class OrderController extends Controller
 
             return view('erp.viewOrder', ['orders' => $orders]);
         } catch (Throwable $throwable) {
-            dd($throwable->getMessage(), $throwable->getFile(), $throwable->getLine());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
         }
     }
 
@@ -1008,7 +1006,7 @@ class OrderController extends Controller
             $pdf->save($pdfPath);
 
             // Create a URL for the PDF file
-            $pdfUrl = "https://dryclean.microlent.com//public/invoices/invoice-4.receipt.pdf";
+            $pdfUrl = url("invoices/invoice-$orderId.receipt.pdf");
 
             // Send the WhatsApp message with the PDF URL
             $response = $whatsAppService->sendMessage($name, $tracking_number, $delivery_date, $pdfUrl);
@@ -1066,7 +1064,7 @@ class OrderController extends Controller
 
             return $pdf->download("invoice-{$order->id}.receipt.pdf");
         } catch (Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
             // Handle the exception and redirect with an error message
             return redirect()->back()->with('error', $throwable->getMessage());
         }
@@ -1106,7 +1104,7 @@ class OrderController extends Controller
 
             return $pdf->download("invoice-{$order->id}.invoice.pdf");
         } catch (Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
             // Handle the exception and redirect with an error message
             return redirect()->back()->with('error', $throwable->getMessage());
         }
@@ -1150,7 +1148,7 @@ class OrderController extends Controller
                 'discountPercentage' => $discountPercentage
             ]);
         } catch (Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
             // Handle the exception and redirect with an error message
             return redirect()->back()->with('error', $throwable->getMessage());
         }
@@ -1327,7 +1325,7 @@ class OrderController extends Controller
                 'laundryOrderItem' => $laundryOrderItem,
             ]);
         } catch (Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
             // Handle the exception and redirect with an error message
             return redirect()->back()->with('error', $throwable->getMessage());
         }
@@ -1374,9 +1372,12 @@ class OrderController extends Controller
 
             return $pdf->stream("taglist-{$order->id}.pdf");
         } catch (\Throwable $throwable) {
-            dd($throwable);
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
             return redirect()->back()->with('error', $throwable->getMessage());
         }
     }
 }
+
+
+
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\backends;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Register;
@@ -28,7 +28,7 @@ class AuthController extends Controller
             }
             return view('erp.auth.login');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -46,7 +46,7 @@ class AuthController extends Controller
                 return redirect()->route('login')->with('error', 'Login Failed | User Name or Password Not Match');
             }
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ class AuthController extends Controller
             }
             return view('erp.auth.changePassword');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ class AuthController extends Controller
 
             return redirect()->route('dashboard')->with('success', 'Password changed successfully');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -92,7 +92,7 @@ class AuthController extends Controller
         try {
             return view('erp.auth.forgetPassword');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -109,7 +109,7 @@ class AuthController extends Controller
 
             return view('erp.auth.otp');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -118,7 +118,7 @@ class AuthController extends Controller
         try {
             return view('erp.auth.otp');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ class AuthController extends Controller
                 return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
             }
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -152,9 +152,9 @@ class AuthController extends Controller
     {
         try {
             Auth::logout();
-            return redirect('/erp/login');
+            return redirect()->route('login');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -165,7 +165,7 @@ class AuthController extends Controller
             $getrole = Role::get(['name']);
             return view('erp.users.create', compact('getrole'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -193,7 +193,7 @@ class AuthController extends Controller
             $user->save();
             return redirect()->route('list.register')->with('success', 'User Add Successfully');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -218,7 +218,7 @@ class AuthController extends Controller
             }
             return view('erp.users.list');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -230,7 +230,7 @@ class AuthController extends Controller
             $userRole = $user->roles->pluck('name', 'name')->all();
             return view('erp.users.create', compact('user', 'getrole', 'userRole'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -254,7 +254,7 @@ class AuthController extends Controller
             $user->update();
             return redirect()->route('list.register')->with('success', 'User Updated Successfully');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -264,8 +264,11 @@ class AuthController extends Controller
             $delete = User::find($id)->delete();
             return redirect()->route('list.register')->with('success', 'User Deleted Successfully');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
+
+
+
 

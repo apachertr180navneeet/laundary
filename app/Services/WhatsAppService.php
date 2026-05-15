@@ -27,10 +27,10 @@ class WhatsAppService
     // // Generate the full URL to the PDF file
     // $mediaUrl = asset('images/' . $pdfFilename);
     // dd($mediaUrl);
-        $response = $this->client->post('301698369697176/messages', [
+        $response = $this->client->post(config('services.facebook.phone_number_id') . '/messages', [
             'json' => [
                 'messaging_product' => 'whatsapp',
-                'to' => '+918000384674', // Update with the recipient's number
+                'to' => config('services.facebook.whatsapp_number', '+918000384674'),
                 'recipient_type' => 'individual',
                 'type' => 'template',
                 'template' => [
@@ -81,7 +81,7 @@ class WhatsAppService
                 ]
             ],
             'headers' => [
-                'Authorization' => 'Bearer ' . env('FACEBOOK_AUTH_TOKEN'),
+                'Authorization' => 'Bearer ' . config('services.facebook.auth_token'),
                 'Content-Type' => 'application/json',
             ],
         ]);

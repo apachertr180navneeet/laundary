@@ -9,12 +9,7 @@ use App\Exports\OrdersExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Throwable;
-use Illuminate\Support\Facades\{ // Grouped imports for facades
-    DB,
-    Log,
-    Validator,
-    Auth
-};
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon; // Date and time manipulation
 
 class InvoiceController extends Controller
@@ -138,4 +133,5 @@ class InvoiceController extends Controller
         return Excel::download(new OrdersExport($orders), 'orders.xlsx');
     }
 }
+
 

@@ -31,4 +31,19 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'msg91' => [
+        'api_key' => env('MSG91_API_KEY'),
+        'sender_id' => env('MSG91_SENDER_ID'),
+        'route' => env('MSG91_ROUTE', '4'),
+        'country' => env('MSG91_COUNTRY', '91'),
+        'authkey' => env('MSG91_AUTHKEY'),
+        'cookie' => env('MSG91_COOKIE'),
+    ],
+
+    'facebook' => [
+        'auth_token' => env('FACEBOOK_AUTH_TOKEN'),
+        'whatsapp_number' => env('WHATSAPP_RECIPIENT_NUMBER'),
+        'phone_number_id' => env('FACEBOOK_PHONE_NUMBER_ID'),
+    ],
+
 ];

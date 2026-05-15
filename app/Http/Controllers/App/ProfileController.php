@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\App;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class ProfileController extends Controller
                 'user' => $request->user(),
             ]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -42,7 +42,7 @@ class ProfileController extends Controller
 
             return Redirect::route('profile.edit')->with('status', 'profile-updated');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -67,7 +67,9 @@ class ProfileController extends Controller
 
             return Redirect::to('/');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
+
+

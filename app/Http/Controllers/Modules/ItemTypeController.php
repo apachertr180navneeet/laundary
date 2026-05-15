@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Modules;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ProductType;
@@ -35,7 +35,7 @@ class ItemTypeController extends Controller
         $itemtype = $query->orderBy('id', 'desc')->paginate(10);
         return view('erp.itemtype', ['itemtype' => $itemtype]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ class ItemTypeController extends Controller
                 return redirect()->route('itemtype')->with('success', 'Product Type added successfully');
             }
         } catch (\Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ class ItemTypeController extends Controller
             // You can pass $service to the view for editing
             return view('erp.itemtype', ['itemtype' => $itemtype]);
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -82,7 +82,7 @@ class ItemTypeController extends Controller
 
             return redirect()->back()->with('success', 'Service updated successfully');
         } catch (\Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
         }
     }
 
@@ -95,8 +95,11 @@ class ItemTypeController extends Controller
 
             return response()->json(['message' => 'Resource deleted successfully']);
         } catch (\Throwable $throwable) {
-            dd($throwable->getMessage());
+            Log::error($throwable->getMessage(), ['file' => $throwable->getFile(), 'line' => $throwable->getLine()]); return redirect()->back()->with('error', $throwable->getMessage());
         }
     }
 }
+
+
+
 

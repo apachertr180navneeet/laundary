@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Modules;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentDetail;
 use App\Models\Order;
@@ -94,8 +94,10 @@ class DashboardController extends Controller
             'newClientsThisMonth', 'deliveredCounts', 'processingCounts', 'monthlyData'
         ));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
+
+
 

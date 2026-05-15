@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Modules;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 
@@ -34,7 +34,7 @@ class ItemController extends Controller
 
         return view('erp.item.item', compact('items'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -46,7 +46,7 @@ class ItemController extends Controller
             $services = Services::get();
             return view('erp.item.itemAdd', compact('categorys','services'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ class ItemController extends Controller
         // Redirect back with success message
         return redirect()->route('items')->with('success', 'Item successfully added');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -129,7 +129,7 @@ class ItemController extends Controller
 
             return view('erp.item.itemEdit', compact('Intemdetails'));
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -166,11 +166,14 @@ class ItemController extends Controller
         // Redirect back with success message
         return redirect()->route('items')->with('success', 'Item successfully added');
         } catch (\Throwable $e) {
-            dd($e);
+            Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
 
 
 }
+
+
+
 
