@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\App;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
@@ -25,10 +26,12 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         try {
-            return view('erp.users.create');
+            $companies = Company::where('status', 1)->get();
+            $selectedCompany = $request->query('company_id');
+            return view('erp.users.create', compact('companies', 'selectedCompany'));
         } catch (\Throwable $e) {
             Log::error($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]); return redirect()->back()->with('error', $e->getMessage());
         }
@@ -45,6 +48,7 @@ class UserController extends Controller
                 'email'=>'required|email|max:255',
                 'mobile_no' => 'required|string|max:20',
                 'role' => 'required|in:user,admin',
+                'company_id' => 'nullable|exists:companies,id',
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 

@@ -23,6 +23,7 @@ class InvoiceController extends Controller
                 ->join('invoices', 'invoices.order_id', '=', 'orders.id')
                 ->join('payment_details', 'payment_details.order_id', '=', 'orders.id')
                 ->where('orders.is_deleted', 0)
+                ->where('orders.company_id', auth()->user()->company_id)
                 ->orderBy('invoices.id','desc')
                 ->where('orders.status', 'delivered')
                 ->paginate(10);
@@ -56,7 +57,8 @@ class InvoiceController extends Controller
                 ->join('invoices', 'invoices.order_id', '=', 'orders.id')
                 ->join('payment_details', 'payment_details.order_id', '=', 'orders.id')
                 ->where('orders.is_deleted', 0)
-                ->where('orders.status', 'delivered');
+                ->where('orders.status', 'delivered')
+                ->where('orders.company_id', auth()->user()->company_id);
 
             if ($request->has('startDate') && $request->has('endDate')) {
                 $startDate = $request->input('startDate');
@@ -112,6 +114,7 @@ class InvoiceController extends Controller
                 ->whereBetween('orders.updated_at', [$startDate, $endDate])
                 ->where('orders.is_deleted', 0)
                 ->where('orders.status', 'delivered')
+                ->where('orders.company_id', auth()->user()->company_id)
                 ->whereNotNull('orders.updated_at') // Ensure updated_at is not null
                 ->orderBy('invoices.invoice_number', 'asc')
                 ->get();
@@ -122,6 +125,7 @@ class InvoiceController extends Controller
                 ->join('invoices', 'invoices.order_id', '=', 'orders.id')
                 ->where('orders.is_deleted', 0)
                 ->where('orders.status', 'delivered')
+                ->where('orders.company_id', auth()->user()->company_id)
                 ->whereNotNull('orders.updated_at') // Ensure updated_at is not null
                 ->orderBy('invoices.invoice_number', 'asc')
                 ->get();

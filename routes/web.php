@@ -18,7 +18,8 @@ use App\Http\Controllers\Modules\{
     ItemTypeController,
     CategoriesController,
     ServicesController,
-    ItemController
+    ItemController,
+    CompanyController
 };
 
 // ============================================
@@ -32,6 +33,11 @@ Route::get('/', function () {
 // ERP SYSTEM
 // ============================================
 Route::prefix('erp')->group(function () {
+
+    // Company-specific login
+    Route::get('/login/{company:slug}', function (App\Models\Company $company) {
+        return view('erp.auth.company-login', compact('company'));
+    })->name('company.login');
 
     // Auth routes (login, forgot password, etc.)
     require __DIR__ . '/auth.php';
@@ -158,6 +164,16 @@ Route::prefix('erp')->group(function () {
             Route::get('/invoice', 'index')->name('invoice');
             Route::get('/indexfilter', 'indexfilter')->name('indexfilter');
             Route::get('/orders/export', 'export')->name('orders.export');
+        });
+
+        // Company
+        Route::controller(CompanyController::class)->group(function () {
+            Route::get('/company', 'index')->name('company.index');
+            Route::post('/company', 'store')->name('company.store');
+            Route::get('/company/{id}/edit', 'edit')->name('company.edit');
+            Route::put('/company/{id}', 'update')->name('company.update');
+            Route::delete('/company/{id}', 'destroy')->name('company.destroy');
+            Route::get('/company/{id}/users', 'users')->name('company.users');
         });
     });
 });

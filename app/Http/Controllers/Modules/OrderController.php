@@ -193,8 +193,8 @@ class OrderController extends Controller
             $itemIds = Item::whereIn('name', $request->itemname)->pluck('id', 'name')->toArray();
             $categoryIds = Category::whereIn('name', $request->itemcategory)->pluck('id', 'name')->toArray();
 
-             // Retrieve or create client
-             $client = User::where('mobile', $validatedData['client_num'])->first();
+             // Retrieve or create client within the same company
+             $client = User::where('company_id', auth()->user()->company_id)->where('mobile', $validatedData['client_num'])->first();
 
             // Check if client exists and is marked as deleted
             if ($client) {
@@ -206,6 +206,7 @@ class OrderController extends Controller
             } else {
                 // Create a new user if the client doesn't exist
                 $user_id = User::create([
+                    'company_id' => auth()->user()->company_id,
                     'name' => $validatedData['client_name'],
                     'mobile' => $validatedData['client_num'],
                     'role_id' => 2,
@@ -240,16 +241,16 @@ class OrderController extends Controller
 
             // Retrieve or create client
             $client = User::firstOrCreate(
-                ['mobile' => $validatedData['client_num']],
-                ['name' => $validatedData['client_name'], 'role_id' => 2]
+                ['mobile' => $validatedData['client_num'], 'company_id' => auth()->user()->company_id],
+                ['name' => $validatedData['client_name'], 'role_id' => 2, 'company_id' => auth()->user()->company_id]
             );
 
             // Step 5: Create order
             $discountId = $this->getDiscountId($request->discount);
             list($totalPriceDis, $totalDiscount) = $this->calculateTotalPrice($request);
             $order = Order::create([
+                'company_id' => auth()->user()->company_id,
                 'invoice_number' => '',
-                'user_id' => $client->id,
                 'order_date' => Carbon::now()->toDateString(),
                 'order_time' => Carbon::now()->toTimeString(),
                 'delivery_date' => $validatedData['delivery_date'],
@@ -323,6 +324,7 @@ class OrderController extends Controller
             }
             // Step 7: Payment details creation
             PaymentDetail::create([
+                'company_id' => auth()->user()->company_id,
                 'order_id' => $order->id,
                 'total_quantity' => $validatedData['total_qty'],
                 'total_amount' => $totalPriceDis,
@@ -473,10 +475,10 @@ class OrderController extends Controller
             // Step 5: Convert delivery time to 24-hour format
             $deliveryTime24Hour = Carbon::createFromFormat('g:i A', $validatedData['delivery_time'])->format('H:i:s');
 
-            // Step 6: Retrieve or create the client (user)
+            // Step 6: Retrieve or create the client (user) within the same company
             $client = User::firstOrCreate(
-                ['mobile' => $validatedData['client_num']],
-                ['name' => $validatedData['client_name'], 'role_id' => 2]
+                ['mobile' => $validatedData['client_num'], 'company_id' => auth()->user()->company_id],
+                ['name' => $validatedData['client_name'], 'role_id' => 2, 'company_id' => auth()->user()->company_id]
             );
 
             // Step 7: Get discount ID and calculate total price
@@ -484,7 +486,7 @@ class OrderController extends Controller
             list($totalPriceDis, $totalDiscount) = $this->calculateTotalPrice($request);
 
             // Step 8: Update the order
-            $order = Order::findOrFail($id);
+            $order = Order::where('company_id', auth()->user()->company_id)->findOrFail($id);
             $order->update([
                 'user_id' => $client->id,
                 'order_date' => $validatedData['booking_date'],
@@ -548,6 +550,7 @@ class OrderController extends Controller
             } else {
                 // If payment detail doesn't exist, create a new one
                 PaymentDetail::create([
+                    'company_id' => auth()->user()->company_id,
                     'order_id' => $order->id,
                     'total_quantity' => $validatedData['total_qty'],
                     'total_amount' => $totalPriceDis,
@@ -760,6 +763,7 @@ class OrderController extends Controller
             // Fetching the order and joining user information
             $order = Order::select("users.name", "users.mobile", "orders.*")
             ->join('users', 'users.id', '=', 'orders.user_id')
+            ->where('orders.company_id', auth()->user()->company_id)
             ->findOrFail($id);
 
         // Convert delivery time to 12-hour format
@@ -912,7 +916,8 @@ class OrderController extends Controller
     {
         try {
             $query = Order::with(['user', 'paymentDetail', 'orderItems'])
-                ->where('orders.is_deleted', '!=', 1);
+                ->where('orders.is_deleted', '!=', 1)
+                ->where('orders.company_id', auth()->user()->company_id);
 
             // Apply search filters if provided
             if ($request->ajax()) {
@@ -965,7 +970,7 @@ class OrderController extends Controller
     public function deleteOrder($id)
     {
         try {
-            Order::where('id', '=', $id)->update(['is_deleted' => 1]);
+            Order::where('id', '=', $id)->where('company_id', auth()->user()->company_id)->update(['is_deleted' => 1]);
             return response()->json(['message' => 'Order deleted successfully']);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => $throwable->getMessage()], 500);

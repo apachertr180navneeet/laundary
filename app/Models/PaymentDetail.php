@@ -11,6 +11,7 @@ class PaymentDetail extends Model
     protected $table = 'payment_details';
 
     protected $fillable = [
+        'company_id',
         'order_id',
         'total_quantity',
         'total_amount',
@@ -23,5 +24,10 @@ class PaymentDetail extends Model
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

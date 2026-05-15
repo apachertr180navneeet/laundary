@@ -48,6 +48,20 @@
                                 </span>
                             </div>
                             <div class="col-md-6">
+                                <label class="form-label" for="company_id">Company</label>
+                                <select name="company_id" class="form-control" id="company_id">
+                                    <option value="">Select Company</option>
+                                    @foreach ($companies as $company)
+                                        <option value="{{ $company->id }}" {{ $selectedCompany == $company->id ? 'selected' : '' }}>
+                                            {{ $company->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger" id="company_id_error" style="font-size:.8rem;">
+                                    @error('company_id') {{ $message }} @enderror
+                                </span>
+                            </div>
+                            <div class="col-md-6">
                                 <label class="form-label" for="starting_date">Starting Date</label>
                                 <input type="date" name="starting_date" class="form-control date-input" id="starting_date" />
                                 <span class="text-danger" id="starting_date_error" style="font-size:.8rem;">

@@ -11,6 +11,11 @@
             </span>
             <span class="app-brand-text demo menu-text fw-bold">Laundry ERP</span>
         </a>
+        @if(auth()->user()->company)
+            <div class="mt-0 text-center" style="font-size:.7rem;color:var(--pre-primary);font-weight:600;opacity:.8;">
+                {{ auth()->user()->company->name }}
+            </div>
+        @endif
     </div>
     <div class="menu-inner-shadow"></div>
     <ul class="menu-inner py-1 mt-0">
@@ -18,6 +23,12 @@
             <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon ti ti-chart-bar"></i>
                 <div data-i18n="Analytics">Analytics Dashboard</div>
+            </a>
+        </li>
+        <li class="menu-item @if(request()->routeIs('company.*')) active @endif">
+            <a href="{{ route('company.index') }}" class="menu-link">
+                <i class="menu-icon ti ti-building"></i>
+                <div data-i18n="Company">Company</div>
             </a>
         </li>
         <li class="menu-item">

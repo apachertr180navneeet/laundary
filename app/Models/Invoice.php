@@ -10,9 +10,14 @@ class Invoice extends Model
     use HasFactory;
     protected $table = 'invoices';
     protected $fillable = [
+        'company_id',
         'order_id',
         'invoice_number',
         'id',
     ];
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

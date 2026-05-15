@@ -17,7 +17,7 @@ class ClientController extends Controller
     public function index(Request $request)
     {
 
-        $query = User::where(['is_deleted' => 0, 'role_id' => 2]);
+        $query = User::where(['is_deleted' => 0, 'role_id' => 2, 'company_id' => auth()->user()->company_id]);
 
         if ($request->ajax()) {
             $search = $request->input('search');
@@ -77,8 +77,8 @@ class ClientController extends Controller
                 return redirect()->back()->withErrors($validator->errors())->withInput();
             }
 
-            // Check if a user with the same mobile number and is_deleted = 1 exists
-            $existingUser = User::where('mobile', $request->mobile)->where('is_deleted', 1)->first();
+            // Check if a user with the same mobile number and is_deleted = 1 exists in the same company
+            $existingUser = User::where('company_id', auth()->user()->company_id)->where('mobile', $request->mobile)->where('is_deleted', 1)->first();
 
             if ($existingUser) {
                 // Update the existing user with the new data
@@ -95,6 +95,7 @@ class ClientController extends Controller
                 $email = $request->email ?? 'client_' . $request->mobile . '@laundry.local';
                 $password = $request->password ? bcrypt($request->password) : bcrypt(config('app.default_password', 'password123'));
                 User::create([
+                    'company_id' => auth()->user()->company_id,
                     'name' => $request->name,
                     'email' => $email,
                     'mobile' => $request->mobile,
@@ -151,8 +152,8 @@ class ClientController extends Controller
                 ]);
             }
 
-            // Find the client by ID
-            $client = User::findOrFail($id);
+            // Find the client by ID within same company
+            $client = User::where('company_id', auth()->user()->company_id)->findOrFail($id);
 
             // Update the client with the validated data
             $client->update([
@@ -176,7 +177,7 @@ class ClientController extends Controller
     public function deleteClient($id)
     {
         try {
-            $client = User::findOrFail($id);
+            $client = User::where('company_id', auth()->user()->company_id)->findOrFail($id);
             $client->update(['is_deleted' => 1]);
             return response()->json(['success' => true,'message' => 'Client deleted successfully']);
         } catch (\Throwable $throwable) {

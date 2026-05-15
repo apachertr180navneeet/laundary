@@ -10,6 +10,7 @@ class Order extends Model
     use HasFactory;
     protected $table = 'orders';
     protected $fillable = [
+        'company_id',
         'user_id',
         'invoice_number',
         'order_number',
@@ -49,5 +50,8 @@ class Order extends Model
         return $this->hasOne(PaymentDetail::class, 'order_id');
     }
 
-
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

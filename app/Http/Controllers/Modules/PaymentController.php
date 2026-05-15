@@ -33,7 +33,8 @@ class PaymentController extends Controller
             ->join('orders', 'orders.id', '=', 'payment_details.order_id')
             ->join('users', 'users.id', '=', 'orders.user_id')
             ->where('orders.is_deleted', 0)
-            ->where('orders.status', 'delivered');
+            ->where('orders.status', 'delivered')
+            ->where('orders.company_id', auth()->user()->company_id);
 
         if ($request->ajax()) {
             $search = $request->input('search');
@@ -131,6 +132,7 @@ class PaymentController extends Controller
                 }
                 // Create a new invoice and associate it with the order
                 $invoice = Invoice::create([
+                    'company_id' => auth()->user()->company_id,
                     'order_id' => $orderId,
                     'invoice_number' => $lastinvoice
                 ]); // Automatically saves the invoice
