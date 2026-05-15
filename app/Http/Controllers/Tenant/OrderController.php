@@ -13,7 +13,6 @@ use App\Models\{ // Grouped imports for models
     Discount,
     OrderItem,
     Service,
-    Tenant,
     Operations,
     Item,
     ItemDetail,

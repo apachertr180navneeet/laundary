@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-md-10">
-                                <h5 class="card-header ">Users List</h5>
+                                <h5 class="card-header ">Admin Users List</h5>
                             </div>
                             <div class="col-md-2 text-end mb-2">
                                 <a href="{{ route('tenants.create') }}" class="btn btn_1F446E_hp">Create</a>
@@ -48,28 +48,15 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Domain</th>
-                                        <th>Date</th>
                                         <th>Is Active</th>
                                         <th>Action</th>
                                     </tr>
-
                                 </thead>
                                 <tbody>
                                     @foreach ($tenants as $tenant)
                                         <tr>
                                             <td>{{ $tenant->name }}</td>
                                             <td>{{ $tenant->email }}</td>
-                                            <td>
-                                                @foreach ($tenant->domains as $domain)
-                                                    {{ $domain->domain }}{{ $loop->last ? '' : ',' }}
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                @foreach ($tenant->subscriptions as $subscription)
-                                                    {{ $subscription->starting_date }} - {{ $subscription->end_date }}
-                                                @endforeach
-                                            </td>
                                             <td>
                                                 @if ($tenant->is_active == 1)
                                                     <span class="badge badge-success">Activate</span>
@@ -110,7 +97,7 @@
                     Are you sure you want to delete this service?
                 </div>
                 <form method="post" id="deletetenantForm">
-                    @csrf <!-- Include CSRF token -->
+                    @csrf
                     @method('POST')
                     <input type="hidden" id="tenant_del_id" name="tenent_id">
                     <div class="modal-footer">
@@ -118,16 +105,14 @@
                         <button type="button" class="btn btn-danger" id="confirm_delete">Delete</button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
-@endsection 
+@endsection
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     $(document).ready(function(){
-        // alert("+++++");
         $('.delete_tenent_btn').click(function() {
             var tenantId = $(this).data('id');
             $('#tenant_del_id').val(tenantId);
@@ -135,21 +120,20 @@
         });
 
         $('#confirm_delete').click(function() {
-            var formData = $('#deletetenantForm').serialize(); // Serialize form data
+            var formData = $('#deletetenantForm').serialize();
             var tenantId = $('#tenant_del_id').val();
-            // alert(tenantId);
 
             $.ajax({
                 url: '/admin/delete-tenant/' + tenantId,
                 type: 'post',
                 data: formData,
                 success: function(response) {
-                    alert(response.message); // or update UI
+                    alert(response.message);
                     $('#delete_tenant').modal('hide');
                     window.location.reload();
                 },
                 error: function(xhr) {
-                    alert('Error deleting resource'); // handle error
+                    alert('Error deleting resource');
                     $('#delete_tenant').modal('hide');
                 }
             });
@@ -172,6 +156,4 @@
         });
     });
 });
-    // for delete service
-
 </script>

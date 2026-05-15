@@ -1,72 +1,64 @@
-create:
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add Tenant') }}
-
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 texstoret-gray-900">
-                    <form method="POST" action="{{ route('tenants.store') }}">
-                        @csrf
-
-                        <!-- Name -->
-                        <div class="mt-4">
-                            <x-input-label for="name" :value="__('Name')" />
-                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+@extends('backend.layouts.app')
+@section('content')
+    <div class="content-wrapper page_content_section_hp">
+        <div class="container-xxl">
+            <div class="client_list_area_hp">
+                <div class="card">
+                    <div class="row align-items-center">
+                        <div class="col-lg-10 col-md-6">
+                            <h5 class="card-header">Add Admin</h5>
                         </div>
-
-                        <!-- Email Address -->
-                        <div class="mt-4">
-                            <x-input-label for="email" :value="__('Email')" />
-                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        <div class="card-body">
+                            <form id="formAuthentication" class="mb-3" action="{{ route('tenants.store') }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-6 mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="text" class="form-control" id="username" name="name"
+                                            placeholder="Enter your username" value="" autofocus />
+                                        <span class="text-danger" id="username_error">
+                                            @error('name')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="text" class="form-control" id="email" name="email"
+                                            placeholder="Enter your email" value="" />
+                                        <span class="text-danger" id="email_error">
+                                            @error('email')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-3 form-password-toggle">
+                                        <label class="form-label" for="password">Password</label>
+                                        <div class="input-group input-group-merge">
+                                            <input type="password" id="password" class="form-control" name="password"
+                                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                                aria-describedby="password" />
+                                            <span class="input-group-text cursor-pointer"><i
+                                                    class="ti ti-eye-off"></i></span>
+                                        </div>
+                                        <label id="password-error" class="error" for="password"></label>
+                                        <span class="text-danger" id="password_error">
+                                            @error('password')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                    <div class="Add_order_btn_area text-end mb-2">
+                                        <button class="btn btn_1F446E_hp">Save</button>
+                                        <a href="{{ route('tenants.index') }}" class="btn btn_1F446E_hp">Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
-
-                        <div class="mt-4">
-                            <x-input-label for="domain_name" :value="__('Domain Name')" />
-                            <x-text-input id="domain_name" class="block mt-1 w-full" type="text" name="domain_name" :value="old('domain_name')" required autofocus autocomplete="domain_name" />
-                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                        </div>
-
-                        <!-- Password -->
-                        <div class="mt-4">
-                            <x-input-label for="password" :value="__('Password')" />
-
-                            <x-text-input id="password" class="block mt-1 w-full"
-                                            type="password"
-                                            name="password"
-                                            required autocomplete="new-password" />
-
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                        </div>
-
-                        <!-- Confirm Password -->
-                        <div class="mt-4">
-                            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-                            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                            type="password"
-                                            name="password_confirmation" required autocomplete="new-password" />
-
-                            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                        </div>
-
-                        <div class="flex items-center justify-end mt-4">
-
-                            <x-primary-button class="ms-4">
-                                {{ __('Create') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

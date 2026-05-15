@@ -3,15 +3,12 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\{
-    InitializeTenancyByDomain,
-    PreventAccessFromCentralDomains
-};
 use App\Http\Controllers\App\{
     ProfileController,
     UserController
 };
 
+use App\Http\Controllers\TenantController;
 use App\Http\Controllers\backends\{
     HomeController,
     AuthController
@@ -57,6 +54,9 @@ Route::middleware('auth')->group(function () {
      Route::get('/edit/profile/{id}', 'editprofile')->name('edit.profile');
      Route::post('/profile/update/{id}', 'updateprofilepost');
  });
+
+ // Admin user management routes
+ Route::resource('tenants', TenantController::class);
 
  // Password management routes
  Route::controller(AuthController::class)->group(function () {

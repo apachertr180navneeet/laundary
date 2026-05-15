@@ -5,8 +5,6 @@ namespace App\Http\Controllers\backends;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Tenant;
-use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 

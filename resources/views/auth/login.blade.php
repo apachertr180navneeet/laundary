@@ -6,7 +6,7 @@
             <div class="authentication-inner py-4  login_page_section_hp">
                 <!-- Login -->
                 <div class="card">
-                    {{-- @dd("hello Tenant"); --}}
+                    
                     <div class="card-body">
                         <!-- Logo -->
                         <div class="app-brand justify-content-center mb-4">

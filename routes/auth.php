@@ -50,6 +50,4 @@ Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])
 
 Route::any('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
-
-Route::resource('tenants',TenantController::class);
 });

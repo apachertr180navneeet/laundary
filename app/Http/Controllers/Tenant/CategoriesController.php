@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Tenant;
 use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

@@ -2,36 +2,33 @@
 
 namespace App\Models;
 
-use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
-use Stancl\Tenancy\Contracts\TenantWithDatabase;
-use Stancl\Tenancy\Database\Concerns\HasDatabase;
-use Stancl\Tenancy\Database\Concerns\HasDomains;
-use App\Models\Subscription;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Tenant extends BaseTenant implements TenantWithDatabase
+class Tenant extends Authenticatable
 {
-    use HasDatabase, HasDomains;
+    use Notifiable;
 
-    public static function getCustomColumns(): array
-    {
-        return [
-            'id',
-            'name',
-            'email',
-            'password',
-            'is_deleted',
-            'is_active'
-        ];
-    }
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'is_deleted',
+        'is_active'
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     public function setPasswordAttribute($value)
     {
-        return $this->attributes['password'] = bcrypt($value);
+        $this->attributes['password'] = bcrypt($value);
     }
 
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class); // Replace Subscription with your actual subscription model class name
+        return $this->hasMany(Subscription::class);
     }
-
 }
