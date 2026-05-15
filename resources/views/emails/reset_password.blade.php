@@ -8,4 +8,4 @@
     2. You will be redirected to a secure page where you can create a new password.
 </p>
 <p>If you have any questions or need further assistance, please contact our support team.</p>
-<p>Thank you for using Mega Solutions Drycleaning.</p>
+<p>Thank you for using Laundry ERP.</p>

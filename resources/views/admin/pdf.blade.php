@@ -7,7 +7,7 @@
     {{-- <img src="/theam/Images/logo.png" class="mt-0 mb-3" style="width: 200px;"> --}}
     <h6 class="mb-0" style="color: #5d596c; font-weight: 600; margin-bottom:0; font-size:18px;margin-top:0;">RECEIPT
     </h6>
-    <p class="mb-0" style="color: #5d596c;margin-bottom:0;font-size:16px; margin-top:0;">Mega Solutions</p>
+    <p class="mb-0" style="color: #5d596c;margin-bottom:0;font-size:16px; margin-top:0;">Laundry ERP</p>
     <p class="mb-0" style="color: #5d596c;margin-bottom:0; font-size:16px;margin-top:0;"> 29,Nehru Nagar, Near old bus stand, Pali , Marwar</p>
     <p class="mb-0" style="color: #5d596c;margin-bottom:0; font-size:16px;margin-top:0;">GST: 08BQFPA2674G2ZZ</p>
     <hr style="margin-bottom:10px;margin-top:10px;"/>

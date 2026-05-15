@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Tenant;
+namespace App\Http\Controllers\Modules;
 
 // Importing necessary classes and models
 use App\Http\Controllers\Controller; // Base controller

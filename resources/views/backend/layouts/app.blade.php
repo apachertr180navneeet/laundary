@@ -6,12 +6,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Mega Solutions</title>
+    <title>Laundry ERP</title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{url('/theam/Images/logo.png')}}" />
+    <link rel="icon" type="image/x-icon" href="{{url('/theam/assets/img/favicon/favicon.ico')}}" />
 
     @include('backend.layouts.include.style')
     @yield('extrastyle')

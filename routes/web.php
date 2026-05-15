@@ -3,20 +3,15 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\{
-    InitializeTenancyByDomain,
-    PreventAccessFromCentralDomains
-};
 use App\Http\Controllers\App\{
     ProfileController,
     UserController
 };
-
 use App\Http\Controllers\backends\{
     HomeController,
     AuthController
 };
-use App\Http\Controllers\Tenant\{
+use App\Http\Controllers\Modules\{
     DashboardController,
     ClientController,
     OrderController,

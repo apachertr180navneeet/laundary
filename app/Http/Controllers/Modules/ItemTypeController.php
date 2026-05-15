@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Tenant;
+namespace App\Http\Controllers\Modules;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Service;
+use App\Models\ProductType;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class ServiceController extends Controller
+class ItemTypeController extends Controller
 {
     //
     public function index(Request $request)
     {
-        $query = Service::query();
+        $query = ProductType::query();
 
         if ($request->ajax()) {
             $search = $request->input('search');
@@ -23,26 +23,20 @@ class ServiceController extends Controller
                 $query->where('name', 'like', '%' . $search . '%');
             }
 
-            $services = $query->orderBy('id', 'desc')->paginate(10);
+            $itemtype = $query->orderBy('id', 'desc')->paginate(10);
 
             return response()->json([
-                'services' => $services->items(),
-                'pagination' => (string) $services->links()
+                'itemtype' => $itemtype->items(),
+                'pagination' => (string) $itemtype->links()
             ]);
         }
 
-        $services = $query->orderBy('id', 'desc')->paginate(10);
-        return view('admin.service', ['services' => $services]);
+        $itemtype = $query->orderBy('id', 'desc')->paginate(10);
+        return view('admin.itemtype', ['itemtype' => $itemtype]);
     }
 
-    public function addService(Request $request)
+    public function addType(Request $request)
     {
-        // $validatedData = $request->validate([
-        //     'name' => 'required|string|max:255',
-        // ]);
-        // Service::create($validatedData);
-        // return redirect()->route('service');
-
 
         try {
             $validator = Validator::make($request->all(), [
@@ -53,11 +47,11 @@ class ServiceController extends Controller
             } else {
 
                 $input = $request->all();
-                Service::create([
+                ProductType::create([
                     'name' => $input['name'],
                 ]);
                 // dd($client);
-                return redirect()->route('service')->with('success', 'Service added successfully');
+                return redirect()->route('itemtype')->with('success', 'Product Type added successfully');
             }
         } catch (\Throwable $throwable) {
             dd($throwable->getMessage());
@@ -66,15 +60,15 @@ class ServiceController extends Controller
 
     public function edit($id)
     {
-        $service = Service::findOrFail($id);
+        $itemtype = ProductType::findOrFail($id);
         // You can pass $service to the view for editing
-        return view('admin.service', ['services' => $service]);
+        return view('admin.itemtype', ['itemtype' => $itemtype]);
     }
 
-    public function updateService(Request $request, $id)
+    public function updateItemType(Request $request, $id)
     {
         try {
-            $service = Service::findOrFail($id);
+            $service = ProductType::findOrFail($id);
             $service->name = $request->input('name');
             $service->save();
 
@@ -85,10 +79,10 @@ class ServiceController extends Controller
     }
 
 
-    public function deleteService($id)
+    public function deleteItemType($id)
     {
         try {
-            $resource = Service::findOrFail($id);
+            $resource = ProductType::findOrFail($id);
             $resource->delete();
 
             return response()->json(['message' => 'Resource deleted successfully']);

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Tenant;
+namespace App\Http\Controllers\Modules;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
