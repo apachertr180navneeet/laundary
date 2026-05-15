@@ -284,12 +284,7 @@
                                 <span>Payments</span>
                             </a>
                         </div>
-                        <div class="col-6 col-sm-3 col-lg">
-                            <a href="{{ route('orders.analitices') }}" class="btn btn-outline-premium w-100 py-3 d-flex flex-column align-items-center gap-1">
-                                <i class="ti ti-report-analytics" style="font-size:1.5rem;"></i>
-                                <span>Analytics</span>
-                            </a>
-                        </div>
+
                     </div>
                 </div>
             </div>

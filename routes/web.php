@@ -3,10 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\App\{
-    ProfileController,
-    UserController
-};
+use App\Http\Controllers\App\UserController;
 use App\Http\Controllers\backends\{
     HomeController,
     AuthController
@@ -16,7 +13,6 @@ use App\Http\Controllers\Modules\{
     ClientController,
     OrderController,
     CategoryController,
-    ServiceController,
     PaymentController,
     InvoiceController,
     ItemTypeController,
@@ -24,9 +20,6 @@ use App\Http\Controllers\Modules\{
     ServicesController,
     ItemController
 };
-// use App\Http\Controllers\ProfileController;
-// use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -146,15 +139,6 @@ Route::controller(ItemController::class)->prefix('admin')->group(function () {
      Route::post('/categorylist', 'editItems');
  });
 
-//  // Service management routes
-//  Route::controller(ServiceController::class)->prefix('admin')->group(function () {
-//      Route::get('/service', 'index')->name('service');
-//      Route::post('/add-service', 'addService')->name('add.service');
-//      Route::post('/edit-services/{id}', 'updateService');
-//      Route::get('/delete-services/{id}', 'deleteService');
-//  });
-
-
  // Item Type management routes
  Route::controller(ItemTypeController::class)->prefix('admin')->group(function () {
      Route::get('/itemtype', 'index')->name('itemtype');
@@ -174,8 +158,7 @@ Route::controller(ItemController::class)->prefix('admin')->group(function () {
      Route::get('/invoice', 'index')->name('invoice');
      Route::get('/indexfilter', 'indexfilter')->name('indexfilter');
      Route::get('/orders/export', 'export')->name('orders.export');
-     Route::get('/orders/analitices', 'analitices')->name('orders.analitices');
-     Route::get('/analytics/filter', 'filterData')->name('analytics.filter');
+
  });
 });
 
