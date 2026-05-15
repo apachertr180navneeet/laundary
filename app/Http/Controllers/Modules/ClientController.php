@@ -36,7 +36,7 @@ class ClientController extends Controller
         }
 
         $clients = $query->orderBy('id', 'desc')->paginate(10);
-        return view('admin.client', compact('clients'));
+        return view('erp.client', compact('clients'));
     }
 
     public function addClient(Request $request)
@@ -184,3 +184,4 @@ class ClientController extends Controller
         }
     }
 }
+

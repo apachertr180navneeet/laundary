@@ -24,9 +24,9 @@ class AuthController extends Controller
     {
         try {
             if (!empty(Auth::user()->id)) {
-                return view('backend.dashboard');
+                return view('erp.dashboard');
             }
-            return view('backend.auth.login');
+            return view('erp.auth.login');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -43,7 +43,7 @@ class AuthController extends Controller
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 return redirect()->route('dashboard')->with('success', 'Login Successfully');
             } else {
-                return redirect()->route('admin.login')->with('error', 'Login Failed | User Name or Password Not Match');
+                return redirect()->route('login')->with('error', 'Login Failed | User Name or Password Not Match');
             }
         } catch (\Throwable $e) {
             dd($e);
@@ -56,7 +56,7 @@ class AuthController extends Controller
             $user = Auth::user();
             if ($user->is_admin == '0') {
             }
-            return view('backend.auth.changePassword');
+            return view('erp.auth.changePassword');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -90,7 +90,7 @@ class AuthController extends Controller
     public function forgetPassword()
     {
         try {
-            return view('backend.auth.forgetPassword');
+            return view('erp.auth.forgetPassword');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -107,7 +107,7 @@ class AuthController extends Controller
             );
             // \Mail::to($email)->send(new ResetPasswordMail($otp));
 
-            return view('backend.auth.otp');
+            return view('erp.auth.otp');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -116,7 +116,7 @@ class AuthController extends Controller
     public function createOTP()
     {
         try {
-            return view('backend.auth.otp');
+            return view('erp.auth.otp');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -152,7 +152,7 @@ class AuthController extends Controller
     {
         try {
             Auth::logout();
-            return redirect('/admin');
+            return redirect('/erp/login');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -163,7 +163,7 @@ class AuthController extends Controller
     {
         try {
             $getrole = Role::get(['name']);
-            return view('backend.users.create', compact('getrole'));
+            return view('erp.users.create', compact('getrole'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -216,7 +216,7 @@ class AuthController extends Controller
                     ->rawColumns(['action'])
                     ->make(true);
             }
-            return view('backend.users.list');
+            return view('erp.users.list');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -228,7 +228,7 @@ class AuthController extends Controller
             $user = User::find($id);
             $getrole = Role::get(['name']);
             $userRole = $user->roles->pluck('name', 'name')->all();
-            return view('backend.users.create', compact('user', 'getrole', 'userRole'));
+            return view('erp.users.create', compact('user', 'getrole', 'userRole'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -268,3 +268,4 @@ class AuthController extends Controller
         }
     }
 }
+

@@ -27,7 +27,7 @@ class CategoryController extends Controller
         $laundries = ProductItem::where('product_id', 5)->get();
         $services = Service::all();
         // dd($clothes_data);
-        return view('admin.categorylist', ['clothes_datas' => $clothes_datas, 'upholstery_datas' => $upholstery_datas, 'footwearandbags' => $footwearandbags, 'others' => $others, 'services' => $services, 'laundries' => $laundries]);
+        return view('erp.categorylist', ['clothes_datas' => $clothes_datas, 'upholstery_datas' => $upholstery_datas, 'footwearandbags' => $footwearandbags, 'others' => $others, 'services' => $services, 'laundries' => $laundries]);
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -181,7 +181,7 @@ class CategoryController extends Controller
             $products = Product::all();
             $services = Service::all();
             $producttypes = ProductType::all();
-            return view('admin.category', ['products' => $products, 'services' => $services, 'producttypes' => $producttypes]);
+            return view('erp.category', ['products' => $products, 'services' => $services, 'producttypes' => $producttypes]);
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -234,3 +234,4 @@ class CategoryController extends Controller
         }
     }
 }
+

@@ -88,7 +88,7 @@ class DashboardController extends Controller
             ];
         }
 
-        return view('backend.dashboard', compact(
+        return view('erp.dashboard', compact(
             'orders', 'clientCounts', 'orderCounts', 'todayOrderCounts',
             'pendingOrderCounts', 'pendingOrders', 'revenue', 'monthlyRevenue',
             'newClientsThisMonth', 'deliveredCounts', 'processingCounts', 'monthlyData'
@@ -98,3 +98,4 @@ class DashboardController extends Controller
         }
     }
 }
+

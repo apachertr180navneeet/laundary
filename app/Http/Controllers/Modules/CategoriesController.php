@@ -43,7 +43,7 @@ class CategoriesController extends Controller
 
         // Handle non-AJAX request
         $categories = $query->orderBy('id', 'desc')->paginate(10);
-        return view('admin.category.category', compact('categories'));
+        return view('erp.category.category', compact('categories'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -223,3 +223,4 @@ class CategoriesController extends Controller
     }
 
 }
+

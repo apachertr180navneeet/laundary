@@ -619,7 +619,7 @@ class OrderController extends Controller
         $currentdate = $currentdatetime->toDateString();
         $currenttime = $currentdatetime->toTimeString();
 
-        return view('admin.EditOrder', compact('groupedProductItems', 'discounts', 'services', 'timeSlots', 'currentdate', 'currenttime'));
+        return view('erp.EditOrder', compact('groupedProductItems', 'discounts', 'services', 'timeSlots', 'currentdate', 'currenttime'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -638,7 +638,7 @@ class OrderController extends Controller
             ->get();
 
         // Return the operation view with data and additional parameters
-        return view('admin.operation.operationview', ['data' => $data, "others" => $others])->render();
+        return view('erp.operation.operationview', ['data' => $data, "others" => $others])->render();
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -816,7 +816,7 @@ class OrderController extends Controller
         }
 
         // Passing all necessary data to the view
-        return view('admin.orderupdate', compact('order', 'orderItems', 'groupedProductItems', 'discounts', 'services', 'timeSlots', 'currentdate', 'currenttime','total_amount','orderDiscount','orderDiscountamount','discountAmount'));
+        return view('erp.orderupdate', compact('order', 'orderItems', 'groupedProductItems', 'discounts', 'services', 'timeSlots', 'currentdate', 'currenttime','total_amount','orderDiscount','orderDiscountamount','discountAmount'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -845,7 +845,7 @@ class OrderController extends Controller
                 }
             }
         }
-        return view('admin.operation.editoperationview', ['data' => $data, "others" => $others])->render();
+        return view('erp.operation.editoperationview', ['data' => $data, "others" => $others])->render();
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -895,7 +895,7 @@ class OrderController extends Controller
             $totalAmount = $subTotalAmount - $discountAmount;
 
             // Return the view with the order details
-            return view('admin.OrderDetail', [
+            return view('erp.OrderDetail', [
                 'orders' => $orders,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -955,7 +955,7 @@ class OrderController extends Controller
                 $order->item_status = $order->orderItems->max('status');
             });
 
-            return view('admin.viewOrder', ['orders' => $orders]);
+            return view('erp.viewOrder', ['orders' => $orders]);
         } catch (Throwable $throwable) {
             dd($throwable->getMessage(), $throwable->getFile(), $throwable->getLine());
         }
@@ -998,8 +998,8 @@ class OrderController extends Controller
             $delivery_date = $order->delivery_date;
             $order_id = $order->id;
 
-            // Generate the PDF from the 'admin.pdf' view
-            $pdf = PDF::loadView('admin.pdf', compact('order', 'subTotalAmount', 'discountAmount', 'totalAmount', 'discountPercentage'));
+            // Generate the PDF from the 'erp.pdf' view
+            $pdf = PDF::loadView('erp.pdf', compact('order', 'subTotalAmount', 'discountAmount', 'totalAmount', 'discountPercentage'));
 
             // Define the path to save the PDF
             $pdfPath = public_path("invoices/invoice-{$order_id}.receipt.pdf");
@@ -1056,7 +1056,7 @@ class OrderController extends Controller
             $totalAmount = $subTotalAmount - $discountAmount;
 
             // Pass data to the view
-            $pdf = PDF::loadView('admin.pdf', [
+            $pdf = PDF::loadView('erp.pdf', [
                 'order' => $order,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -1095,7 +1095,7 @@ class OrderController extends Controller
             $totalAmount = $subTotalAmount - $discountAmount;
 
             // Pass data to the view
-            $pdf = PDF::loadView('admin.invoiceDetail', [
+            $pdf = PDF::loadView('erp.invoiceDetail', [
                 'order' => $order,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -1142,7 +1142,7 @@ class OrderController extends Controller
             $totalAmount = $subTotalAmount - $discountAmount;
             //dd($order->toArray());
             // Pass data to the view
-            return view('admin.receipt', [
+            return view('erp.receipt', [
                 'order' => $order,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -1182,7 +1182,7 @@ class OrderController extends Controller
              $totalAmount = $subTotalAmount - $discountAmount;
 
             // Pass data to the view
-            $pdf = PDF::loadView('admin.pdf', [
+            $pdf = PDF::loadView('erp.pdf', [
                 'order' => $order,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -1230,7 +1230,7 @@ class OrderController extends Controller
             $totalAmount = $subTotalAmount - $discountAmount;
             //dd($order->toArray());
             // Pass data to the view
-            return view('admin.invoicePdf', [
+            return view('erp.invoicePdf', [
                 'order' => $order,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -1268,7 +1268,7 @@ class OrderController extends Controller
             $invoiceNumber = $invoice->invoice_number;
 
             // Pass data to the view
-            $pdf = PDF::loadView('admin.invoiceDetail', [
+            $pdf = PDF::loadView('erp.invoiceDetail', [
                 'order' => $order,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -1318,7 +1318,7 @@ class OrderController extends Controller
             // dd($laundryOrderItem);
 
             // Pass data to the view
-            return view('admin.tagslist', [
+            return view('erp.tagslist', [
                 'order' => $order,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -1362,7 +1362,7 @@ class OrderController extends Controller
             // Define the custom paper size (144pt x 187pt)
             $customPaper = [0, 0, 144, 187];
 
-            $pdf = PDF::loadView('admin.downloadTagslist', [
+            $pdf = PDF::loadView('erp.downloadTagslist', [
                 'order' => $order,
                 'subTotalAmount' => $subTotalAmount,
                 'discountAmount' => $discountAmount,
@@ -1379,3 +1379,4 @@ class OrderController extends Controller
         }
     }
 }
+

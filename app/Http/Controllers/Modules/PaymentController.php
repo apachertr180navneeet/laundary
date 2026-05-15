@@ -59,7 +59,7 @@ class PaymentController extends Controller
 
         $payments = $query->orderBy('payment_details.updated_at', 'desc')->paginate(10);
 
-        return view('admin.payment', ['payments' => $payments]);
+        return view('erp.payment', ['payments' => $payments]);
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -209,3 +209,4 @@ class PaymentController extends Controller
         }
     }
 }
+

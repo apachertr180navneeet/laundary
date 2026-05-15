@@ -48,7 +48,7 @@ class ServicesController extends Controller
 
         // Handle non-AJAX requests: fetch services and render the view
         $services = $query->orderBy('id', 'desc')->paginate(10);
-        return view('admin.service.service', compact('services'));
+        return view('erp.service.service', compact('services'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -217,3 +217,4 @@ class ServicesController extends Controller
     }
 
 }
+

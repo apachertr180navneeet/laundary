@@ -17,7 +17,7 @@ class ConfirmablePasswordController extends Controller
      */
     public function show(): View
     {
-        return view('auth.confirm-password');
+        return view('erp.auth.confirm-password');
     }
 
     /**
@@ -30,7 +30,7 @@ class ConfirmablePasswordController extends Controller
             'password' => $request->password,
         ])) {
             throw ValidationException::withMessages([
-                'password' => __('auth.password'),
+                'password' => __('erp.auth.password'),
             ]);
         }
 
@@ -39,3 +39,4 @@ class ConfirmablePasswordController extends Controller
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 }
+

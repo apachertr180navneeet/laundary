@@ -32,7 +32,7 @@ class ItemController extends Controller
         // Handle non-AJAX requests: fetch items and render the view
         $items = $query->orderBy('item_detail.id', 'desc')->paginate(10);
 
-        return view('admin.item.item', compact('items'));
+        return view('erp.item.item', compact('items'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -44,7 +44,7 @@ class ItemController extends Controller
         try {
             $categorys = Category::get();
             $services = Services::get();
-            return view('admin.item.itemAdd', compact('categorys','services'));
+            return view('erp.item.itemAdd', compact('categorys','services'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -127,7 +127,7 @@ class ItemController extends Controller
             ->where('item_detail.id', $id)
             ->first();
 
-            return view('admin.item.itemEdit', compact('Intemdetails'));
+            return view('erp.item.itemEdit', compact('Intemdetails'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -173,3 +173,4 @@ class ItemController extends Controller
 
 
 }
+

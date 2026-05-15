@@ -15,7 +15,7 @@ class PasswordResetLinkController extends Controller
      */
     public function create(): View
     {
-        return view('auth.forgot-password');
+        return view('erp.auth.forgot-password');
     }
 
     /**
@@ -42,3 +42,4 @@ class PasswordResetLinkController extends Controller
                             ->withErrors(['email' => __($status)]);
     }
 }
+

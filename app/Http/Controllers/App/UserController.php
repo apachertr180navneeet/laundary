@@ -16,7 +16,7 @@ class UserController extends Controller
         try {
             $users = User::get();
             //dd($tenants->toArray());
-            return view('app.users.index',['users'=>$users]);
+            return view('erp.users.index',['users'=>$users]);
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -28,7 +28,7 @@ class UserController extends Controller
     public function create()
     {
         try {
-            return view('app.users.create');
+            return view('erp.users.create');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -103,3 +103,4 @@ class UserController extends Controller
         }
     }
 }
+

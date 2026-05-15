@@ -38,7 +38,7 @@ class InvoiceController extends Controller
 
             $totalAmount = $orders->sum('total_price');
 
-            return view('admin.invoice', [
+            return view('erp.invoice', [
                 'orders' => $orders,
                 'totalTaxableAmount' => $totalTaxableAmount,
                 'totalAmount' => $totalAmount,
@@ -86,7 +86,7 @@ class InvoiceController extends Controller
                 ]);
             }
 
-            return view('admin.invoice', [
+            return view('erp.invoice', [
                 'orders' => $orders,
                 'totalTaxableAmount' => $totalTaxableAmount,
                 'totalAmount' => $totalAmount,
@@ -138,3 +138,4 @@ class InvoiceController extends Controller
         return Excel::download(new OrdersExport($orders), 'orders.xlsx');
     }
 }
+

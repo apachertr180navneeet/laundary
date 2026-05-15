@@ -19,7 +19,7 @@ class HomeController extends Controller
             $user = Auth::user();
             if ($user->is_admin == '0') {
             }
-            return view('backend.profile');
+            return view('erp.profile');
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -32,7 +32,7 @@ class HomeController extends Controller
             if ($user->is_admin == '0') {
             }
             $user = User::find($id);
-            return view('backend.updateProfile', compact('user'));
+            return view('erp.updateProfile', compact('user'));
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -72,3 +72,4 @@ class HomeController extends Controller
         }
     }
 }
+

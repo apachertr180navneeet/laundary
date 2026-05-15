@@ -33,7 +33,7 @@ class ItemTypeController extends Controller
         }
 
         $itemtype = $query->orderBy('id', 'desc')->paginate(10);
-        return view('admin.itemtype', ['itemtype' => $itemtype]);
+        return view('erp.itemtype', ['itemtype' => $itemtype]);
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -67,7 +67,7 @@ class ItemTypeController extends Controller
         try {
             $itemtype = ProductType::findOrFail($id);
             // You can pass $service to the view for editing
-            return view('admin.itemtype', ['itemtype' => $itemtype]);
+            return view('erp.itemtype', ['itemtype' => $itemtype]);
         } catch (\Throwable $e) {
             dd($e);
         }
@@ -99,3 +99,4 @@ class ItemTypeController extends Controller
         }
     }
 }
+
